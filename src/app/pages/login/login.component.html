@@ -1,0 +1,35 @@
+<div class="wrapper">
+
+    <div class="content ">
+        <form class="form-signin  form-row  text-center " [formGroup]="dataC" (ngSubmit)="login()">
+            <div class="text-center">
+                <img src="assets/img/mariposa.png" class="w-50">
+                 
+                <h2 class="form-signin-heading  text-center"><strong>Visitas</strong></h2>
+            </div>
+            
+            <hr/>
+            <div class="form-group col-12">
+                <label for="inputPassword4">Cedula</label>
+                <input type="number" class="form-control" name="cedula" formControlName="cedula" placeholder="Cedula"
+                    required="" autofocus="">
+            </div>
+            
+            <div class="form-group col-12">
+                <label for="inputPassword4">Sede</label>
+                <select class="form-control " formControlName="sede" name="sede">
+                    <option value =""  selected >Elegir sede</option>
+                    <option *ngFor="let item of sede" [value]="item.sedeID">{{item.sedeTITULO}}</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary btn-block" [disabled]="!dataC.valid">Login</button>
+           
+            <button type="button" class="btn btn-block btn-social btn-google" (click)="onLoginGoogle()">
+                <span class="fa fa-google"></span>
+                GOOGLE
+            </button>
+        </form>
+        
+    </div>
+
+</div>

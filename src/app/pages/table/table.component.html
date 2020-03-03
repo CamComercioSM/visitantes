@@ -1,0 +1,142 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-plain">
+      <div class="card-header text-center d-flex justify-content-center">
+        <!-- <h4 class="card-title">Trabajadores</h4> -->
+
+        <!-- <p class="card-category">descripcion</p> -->
+        <div class="col-sm-5 my-1  d-flex justify-content-center">
+          <input type="text" class="form-control" id="inlineFormInputName" placeholder="Buscador" name="filtroPost"
+            [(ngModel)]="filtroPost">
+        </div>
+
+      </div>
+      <hr />
+      <div class="row text-center d-flex justify-content-center">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <!-- <label class="btn btn-secondary">
+            <span class="badge badge-light">{{todos}}</span>
+              <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrar('TODOS')" > Activos
+            </label> -->
+          <label class="btn btn-secondary">
+          <span class="badge badge-light">{{todos}}</span>
+            <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrar('TODOS')" > Todos
+          </label>
+          <label class="btn btn-secondary">
+            <span class="badge badge-light">{{entregados}}</span>
+            <input type="radio" name="options" id="option3" autocomplete="off" (click)="filtrar('ENTREGADO')">
+            Entregados
+          </label>
+          <label class="btn btn-secondary">
+            <span class="badge badge-light">{{devueltos}}</span>
+            <input type="radio" name="options" id="option2" autocomplete="off" (click)="filtrar('DEVUELTO')"> Devueltos
+          </label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>
+                Estado_Visitante
+              </th>
+              <th>
+                Estado_Carnet
+              </th>
+              <th>
+                N.Carnet
+              </th>
+              <th>
+                Sede
+              </th>
+              <th>
+                Nombre
+              </th>
+              <th>
+                Cedula
+              </th>
+              <th>
+                Visitar_a
+              </th>
+              <th>
+                Creador
+              </th>
+              <th>
+                Fecha_Visita
+              </th>
+              <th>
+                Fecha_Modificación
+              </th>
+              <th>
+                Foto
+              </th>
+            </thead>
+            <tbody *ngIf="visitas.length>=1">
+              <tr *ngFor="let visita of visitas | filtro:filtroPost| paginate: { itemsPerPage: 50, currentPage: p };let i = index">
+                <td class="bg-success" *ngIf="visita.visitaESTADOVISITANTE==ACTIVO"  >
+                <button  class="btn btn-success" (click)="ModalcambiarEstados(visita.visitaID,FINALIZADA,i)" ><i class="nc-icon nc-tap-01 "></i> Cambiar Estado</button>
+                </td>
+                <td class="bg-danger" *ngIf="visita.visitaESTADOVISITANTE == FINALIZADA">
+                   {{visita.visitaESTADOVISITANTE}}
+                </td>
+                <td class="bg-warning" *ngIf="visita.visitaESTADOCARNET==ENTREGADO"  >
+                  {{visita.visitaESTADOCARNET}} 
+                </td>
+                <td class="bg-success" *ngIf="visita.visitaESTADOCARNET ==DEVUELTO">
+                  {{visita.visitaESTADOCARNET}} 
+                </td>
+                <td *ngIf="visita.visitaNUMCARNET" >
+                  {{visita.visitaNUMCARNET}}
+                </td>
+                <td *ngIf="!visita.visitaNUMCARNET" >
+                  SIN NUMERO
+                </td>
+                <td>
+                  {{visita.sedeTITULO}}
+                </td>
+                <td>
+                  {{visita.personaRAZONSOCIAL}}
+                </td>
+                <td>
+                  {{visita.personaIDENTIFICACION}}
+                </td>
+                <td>
+                  {{visita.ColaboradorRAZONSOCIAL}}
+                </td>
+                <td>
+                  {{visita.UsrCreoRAZONSOCIAL}}
+                </td>
+                <td>
+                  {{visita.visitaFCHVISITA|date : 'MMM d, y, h:mm a'}}
+                </td>
+                <td>
+                  {{visita.visitaFCHMODIFICACION|date : 'MMM d, y, h:mm a'}}
+                </td>
+                <td *ngIf="visita.visitaFOTO">
+                 <button (click)="foto(visita.personaRAZONSOCIAL,visita.visitaFOTO)" class="btn btn-lg btn-primary" > <i class="nc-icon nc-single-02 "></i></button>
+                </td>
+
+                <td *ngIf="!visita.visitaFOTO" >
+                    SIN FOTO
+                </td>
+
+              </tr>
+            </tbody>
+
+          </table>
+          <pagination-controls *ngIf="visitas.length>=1  " (pageChange)="p = $event"></pagination-controls>
+          <div *ngIf="visitas.length ==0 && !vacio" class=" w-100 ">
+            <div class="sonar-wrapper">
+              <div class="sonar-emitter">
+                <div class="sonar-wave"></div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="visitas.length ==0 && vacio" class=" w-100  text-center">
+                <h4>No hay campos en el momento</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
