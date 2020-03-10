@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AlertasService } from 'app/clases/alertas.service';
+import { NCarnetService } from 'app/servicios/ncarnet.service';
 
 @Component({
   selector: 'app-visita-programada',
@@ -16,6 +17,7 @@ export class VisitaProgramadaComponent implements OnInit {
   public visitas = [];
   vacio: boolean = false;
   public VISITATOL = [];
+  N_carnet=[];
   p: number = 1;
   filtroPost = '';
   date: Date;
@@ -33,49 +35,50 @@ export class VisitaProgramadaComponent implements OnInit {
   DEVUELTO='DEVUELTO';
   ENTREGADO='ENTREGADO';
   SIN_CARNET='SIN CARNET';
+  PENDIENTE='PENDIENTE';
 
-  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService) {
+  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public NCarnetService:NCarnetService) {
 
   }
   ngOnInit() {
     this.getVisitas();
-
+    
   }
   // filtrar por fecha
-  filtraFecha() {
-    if (this.date) {
-      this.visitas = this.VISITATOL.filter((obj) => {
-        if (obj.visitaFCHPROGRAMADA) {
-          //descomponer fecha del registro
-          let fecha = new Date(String(obj.visitaFCHPROGRAMADA));
-          let dia = fecha.getDate();
-          let mes = fecha.getMonth();
-          let anio = fecha.getFullYear();
-          let fecha2 = String(anio + "-" + mes + "-" + dia);
-          //descomponer fecha busqueda
-          let bus = new Date(String(this.date));
-          let dia2 = bus.getDate();
-          let mes2 = bus.getMonth();
-          let anio2 = bus.getFullYear();
-          let busqueda = String(anio2 + "-" + mes2 + "-" + (dia2 + 1));
+  // filtraFecha() {
+  //   if (this.date) {
+  //     this.visitas = this.VISITATOL.filter((obj) => {
+  //       if (obj.visitaFCHPROGRAMADA) {
+  //         //descomponer fecha del registro
+  //         let fecha = new Date(String(obj.visitaFCHPROGRAMADA));
+  //         let dia = fecha.getDate();
+  //         let mes = fecha.getMonth();
+  //         let anio = fecha.getFullYear();
+  //         let fecha2 = String(anio + "-" + mes + "-" + dia);
+  //         //descomponer fecha busqueda
+  //         let bus = new Date(String(this.date));
+  //         let dia2 = bus.getDate();
+  //         let mes2 = bus.getMonth();
+  //         let anio2 = bus.getFullYear();
+  //         let busqueda = String(anio2 + "-" + mes2 + "-" + (dia2 + 1));
 
-          if (fecha2 == busqueda) {
-            return obj;
-          }
+  //         if (fecha2 == busqueda) {
+  //           return obj;
+  //         }
 
-        } else {
+  //       } else {
 
-        }
+  //       }
 
-      });
-      //console.log(this.visitas);
-    } else {
-      this.visitas = this.VISITATOL;
-    }
+  //     });
+  //     //console.log(this.visitas);
+  //   } else {
+  //     this.visitas = this.VISITATOL;
+  //   }
 
-    if (this.visitas.length == 0) { this.vacio = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
+  //   if (this.visitas.length == 0) { this.vacio = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
 
-  }
+  // }
 
   motivo(nombre,motivo) {
     Swal.fire({
@@ -93,27 +96,16 @@ export class VisitaProgramadaComponent implements OnInit {
         this.visitas = res.DATOS;
         this.VISITATOL = res.DATOS;
       }
-      this.contadores();
+     
     });
   }
-  contadores() {
-    this.todos = this.VISITATOL.length;
-    this.entregados = this.VISITATOL.filter((obj) => obj.visitaESTADOCARNET == this.ENTREGADO).length;
-    this.devueltos = this.VISITATOL.filter((obj) => obj.visitaESTADOCARNET == this.DEVUELTO).length;
-  }
-  filtrar(estado) {
-
-    if (estado == this.ENTREGADO || estado == this.DEVUELTO) {
-      this.visitas = this.VISITATOL.filter((obj) => obj.visitaESTADOCARNET == estado);
-    } else {
-      this.visitas = this.VISITATOL;
-    }
-    if (this.visitas.length == 0) { this.vacio = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
-
+  
+  esVacio(array) {
+    if (array.length == 0) { this.vacio = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
   }
 
 
-  ModalcambiarEstados(visitaID,visitaEstadoVisitante,i,visitaESTADOCARNET) {
+  ModalcambiarEstados(visitaID,visitaEstadoVisitante,i) {
 
     if(visitaEstadoVisitante==this.ACTIVO){
       const swalWithBootstrapButtons = Swal.mixin({
@@ -133,7 +125,8 @@ export class VisitaProgramadaComponent implements OnInit {
         reverseButtons: true
       }).then((result) => {
         if (result.value) {
-          this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i);
+          this.nCarnet();
+          this.modalNumCarnet(visitaID,visitaEstadoVisitante, i);
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
@@ -142,115 +135,54 @@ export class VisitaProgramadaComponent implements OnInit {
         }
       });
     }
-
-    if(visitaEstadoVisitante==this.FINALIZADA && visitaESTADOCARNET != this.SIN_CARNET){
-
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: 'btn btn-success',
-          cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-      })
-  
-      swalWithBootstrapButtons.fire({
-        title: 'El carnet fue devuelto?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: ' Si ',
-        cancelButtonText: ' No ',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.value) {
-          this.cambiarEstados(visitaID,this.DEVUELTO,visitaEstadoVisitante, i);
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i);
-        }
-      })
-
+  }
+  nCarnet(){
+    let c='0';
+    for (let index = 0; index < 100; index++) {
+      if (index<10) {
+        this.N_carnet.push(c+index);
+      } else {
+        this.N_carnet.push(index);
+      }
     }
-    if (visitaEstadoVisitante==this.FINALIZADA && visitaESTADOCARNET == this.SIN_CARNET) {
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: 'btn btn-success',
-          cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-      })
-  
-      swalWithBootstrapButtons.fire({
-        title: 'Quiere finalizar la cita?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: ' Si ',
-        cancelButtonText: ' No ',
-        reverseButtons: true
-      }).then((result) => {
-        if (result.value) {
-          this.cambiarEstados(visitaID,this.SIN_CARNET,visitaEstadoVisitante, i);
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          
-        }
-      })
-      
+}
+  async modalNumCarnet(visitaID,visitaEstadoVisitante, i){
+    const { value: formValues } = await Swal.fire({
+      title: 'Seleccione el numero de carnet',
+      input: 'select',
+      inputOptions: this.NCarnetService.getNCarnet(),
+      inputPlaceholder: 'Seleccione el numero',
+      showCancelButton: true
+    });
+    let visitaNUMCARNET=formValues;
+    if(visitaNUMCARNET){
+      this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i,visitaNUMCARNET);
+      //console.log(visitaNUMCARNET);
     }
-   
     
   }
-
-  cambiarEstados(visitaID,visitaEstadoCarnet,visitaEstadoVisitante, i) {
+  cambiarEstados(visitaID,visitaEstadoCarnet,visitaEstadoVisitante, i,visitaNUMCARNET=null) {
     this.BaseService.postJson({
       'visitaID': visitaID,
       'visitaEstadoCarnet': visitaEstadoCarnet,
-      'visitaEstadoVisitante':visitaEstadoVisitante
+      'visitaNUMCARNET': visitaNUMCARNET,
+      'visitaEstadoVisitante':visitaEstadoVisitante,
+      'visitaTIPO':"PROGRAMADA"
     }, this.ACTUALIZAR_ESTADOS).subscribe((res: any) => {
-      console.log(res);
       if (res.RESPUESTA == 'EXITO') {
         this.Alertas.alertSu('success', 'Actualización Exitosa');
-        switch (visitaEstadoVisitante) {
-          case this.ACTIVO:
-            this.cambiarEstadoVisitante(i,this.ACTIVO);
-            break;
-          case this.FINALIZADA:
-            this.cambiarEstadoVisitante(i,this.FINALIZADA);
-            break;
-          default:
-            break;
-        }
-        switch (visitaEstadoCarnet) {
-          case this.DEVUELTO:
-            this.cambiarEstadoCarnet(i, this.DEVUELTO);
-            break;
-          case this.ENTREGADO:
-            this.cambiarEstadoCarnet(i, this.ENTREGADO);
-            break;
-          case this.SIN_CARNET:
-            this.cambiarEstadoCarnet(i, this.SIN_CARNET);
-            break;
-          default:
-            break;
-        }
-        this.contadores();
+        this.router.navigateByUrl('table');
+        //if (visitaEstadoVisitante==this.ACTIVO) {
+          //this.visitas.splice(i, 1);
+          //this.VISITATOL.splice(i, 1);
+          //this.esVacio(this.visitas);
+       // }
       } else {
         this.Alertas.alertOk('error', res.MENSAJE);
       }
     });
   }
 
-  cambiarEstadoCarnet(i,estado){
-    this.visitas[i].visitaESTADOCARNET = estado;
-    this.VISITATOL[i].visitaESTADOCARNET = estado;
-  }
 
-  cambiarEstadoVisitante(i,estado){
-    this.visitas[i].visitaESTADOVISITANTE = estado;
-    this.VISITATOL[i].visitaESTADOVISITANTE = estado;
-  }
 
 }

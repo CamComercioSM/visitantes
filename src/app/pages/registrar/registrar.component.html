@@ -95,7 +95,7 @@
                         <select class="form-control" formControlName="visitar_a" name="visitar_a">
                             <option  value =""  selected >Elegir colaborador</option>
                             <option *ngFor="let item of colaboradores" [value]="item.colaboradorID">
-                                {{item.personaRAZONSOCIAL}}</option>
+                                {{item.personaRAZONSOCIAL|titlecase }}</option>
                         </select>
                     </div>
                 </div>

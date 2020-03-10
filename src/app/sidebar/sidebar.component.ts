@@ -12,7 +12,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/dashboard',     title: 'Estadisticas',         icon:'nc-bank',       class: '' },
     {path: '/visitaProgramada', title:'Visitas Programadas',icon:'nc-tile-56',    class: ''},
     { path: '/table',         title: 'Visitantes',        icon:'nc-tile-56',    class: '' },
-    {path:'#', title: 'Evetos (no funciona)', icon:'nc-tile-56',class:''},
+    {path:'/VisitaEvento', title: 'Evetos', icon:'nc-tile-56',class:''},
     { path: '/trabajador',     title: 'Trabajadores', icon:'nc-bullet-list-67',class: '' },
     { path: '/registrar',     title: 'Registrar Visitante', icon:'nc-badge',class: '' },
 ];

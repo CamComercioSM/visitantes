@@ -2,22 +2,20 @@
   <div class="col-md-12">
     <div class="card card-plain">
       <div class="card-header text-center d-flex justify-content-center">
-        <!-- <h4 class="card-title">Trabajadores</h4> -->
-
-        <!-- <p class="card-category">descripcion</p> -->
+        <button  *ngIf="estadoVisitante=='ACTIVO'" class="btn bg-danger" (click)="filtrarPorEstadoVisitante('FINALIZADA')">VER FINALIZADAS</button>
+        <button *ngIf="estadoVisitante=='FINALIZADA'" class="btn bg-success" (click)="filtrarPorEstadoVisitante('ACTIVO')">VER ACTIVAS</button>
+      </div>
+      <div class="card-header text-center d-flex justify-content-center">
         <div class="col-sm-5 my-1  d-flex justify-content-center">
           <input type="text" class="form-control" id="inlineFormInputName" placeholder="Buscador" name="filtroPost"
             [(ngModel)]="filtroPost">
         </div>
-
       </div>
+     
       <hr />
       <div class="row text-center d-flex justify-content-center">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <!-- <label class="btn btn-secondary">
-            <span class="badge badge-light">{{todos}}</span>
-              <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrar('TODOS')" > Activos
-            </label> -->
+         
           <label class="btn btn-secondary">
           <span class="badge badge-light">{{todos}}</span>
             <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrar('TODOS')" > Todos
@@ -59,13 +57,13 @@
                 Visitar_a
               </th>
               <th>
-                Creador
+                Hora_Visita
               </th>
               <th>
-                Fecha_Visita
+                Tipo_Visitante
               </th>
               <th>
-                Fecha_Modificación
+                Motivo
               </th>
               <th>
                 Foto
@@ -74,7 +72,7 @@
             <tbody *ngIf="visitas.length>=1">
               <tr *ngFor="let visita of visitas | filtro:filtroPost| paginate: { itemsPerPage: 50, currentPage: p };let i = index">
                 <td class="bg-success" *ngIf="visita.visitaESTADOVISITANTE==ACTIVO"  >
-                <button  class="btn btn-success" (click)="ModalcambiarEstados(visita.visitaID,FINALIZADA,i)" ><i class="nc-icon nc-tap-01 "></i> Cambiar Estado</button>
+                <button  class="btn btn-success" (click)="ModalcambiarEstados(visita.visitaID,FINALIZADA,i,visita.visitaESTADOCARNET)" ><i class="nc-icon nc-tap-01 "></i> Cambiar Estado</button>
                 </td>
                 <td class="bg-danger" *ngIf="visita.visitaESTADOVISITANTE == FINALIZADA">
                    {{visita.visitaESTADOVISITANTE}}
@@ -84,6 +82,9 @@
                 </td>
                 <td class="bg-success" *ngIf="visita.visitaESTADOCARNET ==DEVUELTO">
                   {{visita.visitaESTADOCARNET}} 
+                </td>
+                <td class="bg-danger" *ngIf="visita.visitaESTADOCARNET == SIN_CARNET">
+                  SIN CARNET
                 </td>
                 <td *ngIf="visita.visitaNUMCARNET" >
                   {{visita.visitaNUMCARNET}}
@@ -95,7 +96,7 @@
                   {{visita.sedeTITULO}}
                 </td>
                 <td>
-                  {{visita.personaRAZONSOCIAL}}
+                  {{visita.personaRAZONSOCIAL|titlecase}}
                 </td>
                 <td>
                   {{visita.personaIDENTIFICACION}}
@@ -104,16 +105,20 @@
                   {{visita.ColaboradorRAZONSOCIAL}}
                 </td>
                 <td>
-                  {{visita.UsrCreoRAZONSOCIAL}}
+                  {{visita.visitaFCHVISITA|date : 'h:mm a'}}
                 </td>
                 <td>
-                  {{visita.visitaFCHVISITA|date : 'MMM d, y, h:mm a'}}
+                  {{visita.visitaTIPO}}
                 </td>
-                <td>
-                  {{visita.visitaFCHMODIFICACION|date : 'MMM d, y, h:mm a'}}
+                <td *ngIf="visita.visitaMOTIVO">
+                  <button (click)="motivo(visita.personaRAZONSOCIAL,visita.visitaMOTIVO)" class="btn btn-sm  btn-primary p-1" > <i class="nc-icon nc-single-copy-04 "></i></button>
                 </td>
+                 <td *ngIf="!visita.visitaMOTIVO" >
+                     SIN MOTIVO
+                 </td>
+  
                 <td *ngIf="visita.visitaFOTO">
-                 <button (click)="foto(visita.personaRAZONSOCIAL,visita.visitaFOTO)" class="btn btn-lg btn-primary" > <i class="nc-icon nc-single-02 "></i></button>
+                  <button (click)="foto(visita.personaRAZONSOCIAL,visita.visitaFOTO)" class="btn btn-sm btn-primary p-1" > <i class="nc-icon nc-single-02 "></i></button>
                 </td>
 
                 <td *ngIf="!visita.visitaFOTO" >

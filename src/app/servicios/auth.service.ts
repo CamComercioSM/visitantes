@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private afsAuth: AngularFireAuth, private afs: AngularFirestore) { }
   loginGoogleUser() {
     return this.afsAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-      .then(credential => console.log(credential.user))
+      .then(credential => credential.user.email)
   }
   
   logoutUser() {

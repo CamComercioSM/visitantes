@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { BaseService } from '../../servicios/base.service';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AlertasService } from 'app/clases/alertas.service';
-
+import { isUndefined } from 'util';
+import { LocalStorageService } from 'app/servicios/local-storage.service';
+import { NCarnetService } from 'app/servicios/ncarnet.service';
 @Component({
   selector: 'app-visita-evento',
   templateUrl: './visita-evento.component.html',
@@ -13,109 +15,190 @@ import { AlertasService } from 'app/clases/alertas.service';
 })
 export class VisitaEventoComponent implements OnInit {
 
-  public visitas=[];
-    vacio:boolean=false;
-    public VISITATOL=[];
-    p: number = 1;
-    filtroPost = '';
-    entregados:number;
-    devueltos:number;
-    todos:number;
-    GET_VISITAS='administracion/appVisitas/mostrarVisitas/';
-    ACTUALIZAR_ESTADOS='administracion/appVisitas/cambiarEstados/';
-    constructor(public Alertas: AlertasService,private router: Router,private BaseService: BaseService) {
+  public visitas = [];
+  vacio: boolean = false;
+  public VISITATOL = [];
+  p: number = 1;
+  filtroPost = '';
+  entregados: number;
+  devueltos: number;
+  todos: number;
+  selectEvento = ' ';
+  selectAnterior;
 
-    }
-    ngOnInit(){
-       this.getVisitas();
-       
-    }
+  on=false;
+ 
+  // informacion de evento
+  eventoDESCRIPCION;
+  eventoFCHINICIO ;
+  eventoFCHFINAL;
+  eventoLUGAR ;
+  eventoUSRCREO;
 
-    getVisitas(){
-        this.BaseService.getJson(this.GET_VISITAS).subscribe((res: any) => {
-            
-            if (res.DATOS.length==0) {
-                this.vacio=true;
-            } else {
-                this.visitas=res.DATOS;
-                this.VISITATOL=res.DATOS;
-            }
-            this.contadores();
-          });
-    }
-    contadores(){
-        this.todos= this.VISITATOL.length;
-        this.entregados= this.VISITATOL.filter((obj)=>obj.visitaESTADOCARNET=='ENTREGADO').length;
-        this.devueltos= this.VISITATOL.filter((obj)=>obj.visitaESTADOCARNET=='DEVUELTO').length;
-    }
-    filtrar(estado){
-       
-        if (estado=='ENTREGADO'|| estado=='DEVUELTO' ) {
-            this.visitas= this.VISITATOL.filter((obj)=>obj.visitaESTADOCARNET==estado);
+  //asistentes
+  public eventoSelec:any=[];
+  public eventosTodos:any=[];
+  private POST = 'administracion/appVisitas/guardarYActivarVisita/';
+  GET_EVENTOS_DATOS= 'administracion/appVisitas/listadoEventosYAsistentes/';
+ 
+  
+  N_carnet=[];
+  DEVUELTO='DEVUELTO';
+  ENTREGADO='ENTREGADO';
+  SIN_CARNET='SIN CARNET';
+  PENDIENTE='PENDIENTE';
+  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService, public NCarnetService:NCarnetService) {
+
+  }
+
+  ngOnInit() {
+    this.getEventos();
+  }
+
+  getEventos() {
+    let sedeID = this.LocalStorageService.get();
+    this.BaseService.postJson({ 'sedeID': sedeID },this.GET_EVENTOS_DATOS).subscribe((res: any) => {
+      if (res.RESPUESTA == 'EXITO') {
+        if (res.DATOS==null || res.DATOS.length == 0) {
+          this.Alertas.alertSu('info', 'No hay eventos en el momento');
+          this.vacio = true;
         } else {
-            this.visitas= this.VISITATOL;
+           console.log(res.DATOS);
+           this.eventosTodos=res.DATOS;
+           //alert(this.eventosTodos[0].eventoFCHINICIO);
+           this.infoEvento();
+           this.on=true;
         }
-        if (this.visitas.length==0) {this.vacio=true;this.Alertas.alertSu('info', 'No hay campos en el momento');}
-       
-    }
-    foto(nombre,base64){
-        Swal.fire({
-            title: "<strong>"+nombre+"</strong>",
-            html:
-              "<img src='"+base64+"' id='img' alt='foto' class='img-circle img-no-padding img-responsive'>",
-            showCloseButton: true
-          })
-    }
+      }else {
+        this.Alertas.alertOk('error', res.MENSAJE);
+      }
+    });
+  }
 
-    ModalcambiarEstados(visitaID,i){
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-              confirmButton: 'btn btn-success',
-              cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-          })
+  infoEvento(selectEvento='1') {
+   
+     if (selectEvento != undefined && this.selectAnterior != selectEvento && selectEvento!=" ") {
+     if (selectEvento=='1') {
+      this.eventoSelec=this.eventosTodos[0];
+     }else{
+      let filtro= this.eventosTodos.filter(res => selectEvento == res.eventoID);
+      if (this.eventoSelec.length != 0) {
+        this.eventoSelec=filtro[0];
+      } else {
+        this.vacio = true;
+        this.Alertas.alertSu('info', 'No hay eventos en el momento');
+      }
+     }
+      this.selectAnterior = selectEvento;
+     }
+  }
+
+  // filtrar(select) {
+  //   this.asistentes = this.asistentesTodos.filter(res => select == res.eventoID);
+  //   if (this.asistentes.length == 0) {
+  //     this.vacio = true;
+  //     this.Alertas.alertSu('info', 'No hay eventos en el momento');
+  //   }
+  // }
+
+  // getAsistentes() {
+  //   this.BaseService.getJson(this.GET_ASISTENTES).subscribe((res: any) => {
+  //     if (res.RESPUESTA == 'EXITO') {
+  //       console.log(res);
+  //       if (res.DATOS.Asistentes.length == 0) {
+  //         this.vacio = true;
+  //         this.Alertas.alertSu('info', 'No hay eventos en el momento');
+  //       } else {
+  //         console.log(res);
           
-          swalWithBootstrapButtons.fire({
-            title: 'El carnet fue devuelto?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: ' Si ',
-            cancelButtonText: ' No ',
-            reverseButtons: true
-          }).then((result) => {
-            if (result.value) {
-                this.cambiarEstados(visitaID,0,i);
-            } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
-                this.cambiarEstados(visitaID,1,i);
-            }
-          })
-    }
+  //         this.vacio = false;
+  //         this.asistentesTodos = res.DATOS.Asistentes;
+  //         this.asistentes = res.DATOS.Asistentes;
+  //       }
+  //     } else {
+  //       this.Alertas.alertOk('error', res.MENSAJE);
+  //     }
+  //   });
+  // }
+  ModalcambiarEstados(eventoID,eventoAsistenteID,personaID){
 
-    cambiarEstados(visitaID,visitaEstadoCarnet,i){
-        this.BaseService.postJson({
-            'visitaID': visitaID ,
-            'visitaEstadoCarnet': visitaEstadoCarnet,
-          }, this.ACTUALIZAR_ESTADOS).subscribe((res: any) => {
-            console.log(res);
-            if (res.RESPUESTA=='EXITO') {
-                this.Alertas.alertSu('success', 'Actualización Exitosa');
-                if (!visitaEstadoCarnet) {
-                    this.visitas[i].visitaESTADOCARNET='DEVUELTO';
-                    this.VISITATOL[i].visitaESTADOCARNET='DEVUELTO';
-                }
-                this.visitas[i].visitaESTADOVISITANTE='DESACTIVO';
-                this.VISITATOL[i].visitaESTADOVISITANTE='DESACTIVO';
-                this.contadores();
-            } else {
-                this.Alertas.alertOk('error',res.MENSAJE);
-              }   
-          });
-    }
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
+  
+      swalWithBootstrapButtons.fire({
+        title: 'Se entrego carnet?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: ' Si ',
+        cancelButtonText: ' No ',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          this.nCarnet();
+          this.modalNumCarnet(eventoID,eventoAsistenteID,personaID);
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          this.cambiarEstados(eventoID,eventoAsistenteID,personaID,this.SIN_CARNET);
+        }
+      });
+  
+  }
 
+  nCarnet(){
+    let c='0';
+    for (let index = 0; index < 100; index++) {
+      if (index<10) {
+        this.N_carnet.push(c+index);
+      } else {
+        this.N_carnet.push(index);
+      }
+    }
+}
+  async modalNumCarnet(eventoID,eventoAsistenteID,personaID){
+    const { value: formValues } = await Swal.fire({
+      title: 'Seleccione el numero de carnet',
+      input: 'select',
+      inputOptions: this.NCarnetService.getNCarnet(),
+      inputPlaceholder: 'Seleccione el numero',
+      showCancelButton: true
+    });
+    
+    let visitaNUMCARNET=formValues;
+    if(visitaNUMCARNET){
+      console.log(visitaNUMCARNET);
+      this.cambiarEstados(eventoID,eventoAsistenteID,personaID,this.ENTREGADO,visitaNUMCARNET);
+      
+    }
+    
+  }
+  cambiarEstados(eventoID,eventoAsistenteID,personaID,visitaESTADOCARNET,visitaNUMCARNET=null) {
+    let sedeID = this.LocalStorageService.get();
+    this.BaseService.postJson({
+       'visitaTIPO': 'EVENTOS' ,
+        'eventoID': eventoID,
+       'eventoAsistenteID': eventoAsistenteID,
+       'sedeID': sedeID,
+       'personaID': personaID,
+       'visitaNUMCARNET': visitaNUMCARNET,
+       'visitaESTADOCARNET': visitaESTADOCARNET,
+       'colaboradorID': this.eventoSelec.colaboradorID
+     }, this.POST).subscribe((res: any) => {
+       if (res.RESPUESTA=='EXITO') {
+         this.Alertas.alertSu('success', 'Registro Exitoso');
+         this.router.navigateByUrl('table');
+       }else {
+         this.Alertas.alertOk('error',res.MENSAJE);
+       }});
+      
+      }
 
 
 }
+

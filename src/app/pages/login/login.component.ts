@@ -18,6 +18,7 @@ import { auth } from 'firebase/app';
 export class LoginComponent implements OnInit {
   public sede = [];
   dataC: FormGroup;
+  on:boolean=false;
   private POST = 'administracion/appVisitas/autenticarColaborador/';
   private DATOSEDE = 'administracion/appVisitas/datosLogin/';
   constructor(public afAuth: AngularFireAuth, public AuthService:AuthService,private router: Router, private BaseService: BaseService,public Alertas:AlertasService , private LocalStorageService:LocalStorageService) {
@@ -38,10 +39,11 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.on=true;
     let cedula = this.dataC.value.cedula;
     this.BaseService.postJson({ 'cedula': cedula }, this.POST).subscribe((res: any) => {
       if (res.RESPUESTA=='EXITO') {
-        
+        this.on=false;
         this.LocalStorageService.post(this.dataC.value.sede);
         this.LocalStorageService.postDatos(cedula,res.DATOS);
         this.Alertas.alertCe('success','Bienvenido '+ res.DATOS );
@@ -49,6 +51,7 @@ export class LoginComponent implements OnInit {
         location.reload();
       } else {
         this.Alertas.alertOk('error',res.MENSAJE);
+        this.on=false;
         // Swal.fire({
         //   icon: 'error',
         //   text: res.MENSAJE,
@@ -67,12 +70,10 @@ export class LoginComponent implements OnInit {
     
     this.AuthService.loginGoogleUser().then((res) => {
         this.LocalStorageService.post(this.dataC.value.sede);
+        console.log(res);
         this.router.navigateByUrl('registrar');
         this.Alertas.alertCe('success','Bienvenido ');
       }).catch(err => console.log('err', err.message));
   }}
   
-
-
-
 }
