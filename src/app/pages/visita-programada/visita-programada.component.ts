@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AlertasService } from 'app/clases/alertas.service';
 import { NCarnetService } from 'app/servicios/ncarnet.service';
+import { LocalStorageService } from 'app/servicios/local-storage.service';
 
 @Component({
   selector: 'app-visita-programada',
@@ -37,7 +38,7 @@ export class VisitaProgramadaComponent implements OnInit {
   SIN_CARNET='SIN CARNET';
   PENDIENTE='PENDIENTE';
 
-  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public NCarnetService:NCarnetService) {
+  constructor( private LocalStorageService:LocalStorageService ,public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public NCarnetService:NCarnetService) {
 
   }
   ngOnInit() {
@@ -89,7 +90,8 @@ export class VisitaProgramadaComponent implements OnInit {
     })
   }
   getVisitas() {
-    this.BaseService.getJson(this.GET_VISITAS).subscribe((res: any) => {
+    let sede = this.LocalStorageService.get();
+    this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS).subscribe((res: any) => {
       if (res.DATOS.length == 0) {
         this.vacio = true;
       } else {

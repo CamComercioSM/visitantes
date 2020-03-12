@@ -32,8 +32,9 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table">
+        <!-- table-wrapper-scroll-y my-custom-scrollbar -->
+        <div class="table-responsive " >
+          <table class="table" >
             <thead class=" text-primary">
               <th>
                 Estado_Visitante
@@ -58,6 +59,9 @@
               </th>
               <th>
                 Hora_Visita
+              </th>
+              <th *ngIf="estadoVisitante=='FINALIZADA'">
+                Hora_Salida
               </th>
               <th>
                 Tipo_Visitante
@@ -86,11 +90,11 @@
                 <td class="bg-danger" *ngIf="visita.visitaESTADOCARNET == SIN_CARNET">
                   SIN CARNET
                 </td>
-                <td *ngIf="visita.visitaNUMCARNET" >
+                <td *ngIf="visita.visitaNUMCARNET || visita.visitaNUMCARNET!=null" >
                   {{visita.visitaNUMCARNET}}
                 </td>
-                <td *ngIf="!visita.visitaNUMCARNET" >
-                  SIN NUMERO
+                <td *ngIf="!visita.visitaNUMCARNET || visita.visitaNUMCARNET==null" >
+                  <i class="nc-icon nc-simple-remove "></i>
                 </td>
                 <td>
                   {{visita.sedeTITULO}}
@@ -107,6 +111,9 @@
                 <td>
                   {{visita.visitaFCHVISITA|date : 'h:mm a'}}
                 </td>
+                <td *ngIf="estadoVisitante=='FINALIZADA'">
+                  {{visita.visitaFCHSALIDA|date:'h:mm a'}}
+                </td>
                 <td>
                   {{visita.visitaTIPO}}
                 </td>
@@ -114,15 +121,15 @@
                   <button (click)="motivo(visita.personaRAZONSOCIAL,visita.visitaMOTIVO)" class="btn btn-sm  btn-primary p-1" > <i class="nc-icon nc-single-copy-04 "></i></button>
                 </td>
                  <td *ngIf="!visita.visitaMOTIVO" >
-                     SIN MOTIVO
+                  <i class="nc-icon nc-simple-remove "></i>
                  </td>
   
                 <td *ngIf="visita.visitaFOTO">
                   <button (click)="foto(visita.personaRAZONSOCIAL,visita.visitaFOTO)" class="btn btn-sm btn-primary p-1" > <i class="nc-icon nc-single-02 "></i></button>
                 </td>
-
+                
                 <td *ngIf="!visita.visitaFOTO" >
-                    SIN FOTO
+                  <i class="nc-icon nc-simple-remove "></i>
                 </td>
 
               </tr>

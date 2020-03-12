@@ -38,17 +38,6 @@ export class NavbarComponent implements OnInit {
 
       this.displayName = this.LocalStorageService.getDatos('nombre');
 
-    } else {
-      this.AuthService.isAuth().subscribe(user => {
-        if (user) {
-          this.displayName = user.displayName;
-        } else {
-          console.log('oo ->' + user);
-        }
-      }
-
-
-      )
     }
   }
   getTitle() {
@@ -111,13 +100,11 @@ export class NavbarComponent implements OnInit {
   }
 
   logoutUser() {
-
     if (this.LocalStorageService.getDatos('login') == 'true') {
+      this.AuthService.logoutUser();
       localStorage.clear();
       location.reload();
-    } else {
-      this.AuthService.logoutUser();
-    }
+    } 
   }
 
 }

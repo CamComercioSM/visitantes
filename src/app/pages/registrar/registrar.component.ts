@@ -14,6 +14,7 @@ import { AlertasService } from 'app/clases/alertas.service';
 export class RegistrarComponent implements AfterViewInit {
   private POST = 'administracion/appVisitas/guardarYActivarVisita/';
   private DATOFORMULARIO = 'administracion/appVisitas/datosFormulario/';
+  private BUSCARDATOS='personas/datosPersonales/consultaPorIdentificacion';
   @ViewChild("video", { static: false })
   public video: ElementRef;
 
@@ -27,15 +28,17 @@ export class RegistrarComponent implements AfterViewInit {
   public dispositivosDeVideo = [];
   N_carnet=[];
   data: FormGroup;
-
+  on:boolean=false;
+  buscarOn:boolean=false;
   constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService) {
     this.data = new FormGroup({
       nombre: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
       apellido: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
       cedula: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(10)])),
-      id_carnet: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(10)])),
+      id_carnet: new FormControl('', Validators.compose([Validators.maxLength(10)])),
       visitar_a: new FormControl('', Validators.required),
       tipoIdentificacion: new FormControl('', Validators.required),
+      visitaMOTIVO:new FormControl(''),
     });
   }
 
@@ -118,13 +121,37 @@ export class RegistrarComponent implements AfterViewInit {
     this.apagar();
   }
 
+  buscar(){
+    this.buscarOn=true;
+    if(this.data.value.cedula!=""){
+      console.log(this.data.value.cedula);
+      this.BaseService.postJson({
+        'personaIDENTIFICACION': this.data.value.cedula,
+      }, this.BUSCARDATOS).subscribe((res: any) => {
+        if (res.RESPUESTA=='EXITO') {
+          this.data.controls['nombre'].setValue(res.DATOS.personaPRIMERNOMBRE);
+          this.data.controls['tipoIdentificacion'].setValue(res.DATOS.tipoIdentificacionID);
+          this.data.controls['apellido'].setValue(res.DATOS.personaPRIMERAPELLIDO);
+          //this.data.controls['cedula'].setValue('');
+          this.buscarOn=false;
+        }else {
+          this.Alertas.alertOk('error',res.MENSAJE);
+          this.buscarOn=false;
+        }
+
+      });
+    }else{
+      this.buscarOn=false;
+      this.Alertas.alertOk('error','Ingrese la cedula para buscar los datos');
+    }
+  }
+
   registrar() {
+    this.on=true;
     if (!this.data.valid) {
-      // if (!this.OffOn) {
-      //   this.Alertas.alertOk('error','Prenda la camara ');
-      // } else {
+   
         this.Alertas.alertOk('error','Ingrese los datos faltantes');
-      //}
+        this.on=false;
     } else {
       if (this.OffOn) {
         this.capture();
@@ -137,12 +164,19 @@ export class RegistrarComponent implements AfterViewInit {
         'sedeID': sede,
         'tipoIdentificacionID': this.data.value.tipoIdentificacion,
         'personaIDENTIFICACION': this.data.value.cedula,
-        'personaRAZONSOCIAL': this.data.value.nombre + ' ' + this.data.value.apellido
+        'personaRAZONSOCIAL': this.data.value.nombre + ' ' + this.data.value.apellido,
+        'visitaTIPO':"SIN CITA PREVIA",
+        'visitaESTADOCARNET': this.data.value.id_carnet==""? "SIN CARNET" : "ENTREGADO",
+        'visitaMOTIVO':this.data.value.visitaMOTIVO,
+        'personaPRIMERNOMBRE':this.data.value.nombre ,
+        'personaPRIMERAPELLIDO':this.data.value.apellido
       }, this.POST).subscribe((res: any) => {
         if (res.RESPUESTA=='EXITO') {
+          this.on=false;
           this.Alertas.alertSu('success', 'Registro Exitoso');
           this.router.navigateByUrl('table');
         }else {
+          this.on=false;
           this.Alertas.alertOk('error',res.MENSAJE);
         }
 
@@ -157,6 +191,7 @@ export class RegistrarComponent implements AfterViewInit {
     this.data.controls['cedula'].setValue('');
     this.data.controls['visitar_a'].setValue('');
     this.data.controls['id_carnet'].setValue('');
+    this.data.controls['visitaMOTIVO'].setValue('');
     this.photo = '';
     //this.prender();
   }

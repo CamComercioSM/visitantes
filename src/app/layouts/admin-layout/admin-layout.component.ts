@@ -17,18 +17,22 @@ export class AdminLayoutComponent implements OnInit {
 
     if (this.LocalStorageService.getDatos('login')=='true') {
       this.isAuthb=true;
-    } else {
-    this.AuthService.isAuth().subscribe(user => {
-      if (user){
-          console.log(user);
-          this.isAuthb=true;
-      }else{
-        // // console.log('oo ->'+ user);
-        this.isAuthb=false;
-      }
-    
-    });
+     } else{
+      this.isAuthb=false;
      }
+    //  else {
+    // this.AuthService.isAuth().subscribe(user => {
+    //   let validado=this.AuthService.getValidado();
+    //   if (user ){
+    //       console.log(user);
+    //       this.isAuthb=true;
+    //   }else{
+    //     // // console.log('oo ->'+ user);
+    //     this.isAuthb=false;
+    //   }
+    
+    // });
+    //  }
     }
    
 }

@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AlertasService } from 'app/clases/alertas.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LocalStorageService } from 'app/servicios/local-storage.service';
 
 @Component({
   selector: 'table-cmp',
@@ -38,7 +39,7 @@ export class TableComponent implements OnInit {
   ENTREGADO = 'ENTREGADO';
   SIN_CARNET = 'SIN CARNET';
 
-  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService) {
+  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService,private LocalStorageService:LocalStorageService) {
 
   }
 
@@ -51,7 +52,10 @@ export class TableComponent implements OnInit {
   }
 
   getVisitasActivas() {
-    this.BaseService.getJson(this.GET_VISITAS_ACTIVAS).subscribe((res: any) => {
+    let sede = this.LocalStorageService.get();
+    this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS_ACTIVAS).subscribe((res: any) => {
+      console.log(res);
+      
       if (res.RESPUESTA == 'EXITO') {
         this.arrayActivas = res.DATOS;
         this.visitas = this.arrayActivas;
@@ -71,11 +75,13 @@ export class TableComponent implements OnInit {
     })
   }
   getVisitasFinalizadas() {
-    this.BaseService.getJson(this.GET_VISITAS_FINALIZADAS).subscribe((res: any) => {
+    let sede = this.LocalStorageService.get();
+    this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS_FINALIZADAS).subscribe((res: any) => {
       if (res.RESPUESTA == 'EXITO') {
 
         this.arrayFinalizadas = res.DATOS;
-        
+         console.log(this.arrayFinalizadas);
+         
       } else {
         this.Alertas.alertOk('error', res.MENSAJE);
       }
@@ -268,6 +274,8 @@ export class TableComponent implements OnInit {
   cambiarEstadoCarnet(i, estado) {
     this.visitas[i].visitaESTADOCARNET = estado;
     this.arrayActivas[i].visitaESTADOCARNET = estado;
+    this.visitas[i].visitaFCHSALIDA = new Date();
+    this.arrayActivas[i].visitaFCHSALIDA = new Date();
     this.arrayFinalizadas.push(this.visitas[i]);
     console.log(this.arrayActivas);
     console.log(this.visitas);

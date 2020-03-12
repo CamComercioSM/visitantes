@@ -16,10 +16,13 @@ export class LocalStorageService {
     postDatos(cedula,nombre){
       localStorage.setItem('cedula',cedula);
       localStorage.setItem('nombre',nombre);
-      localStorage.setItem('login', 'true');
     }
     getDatos(dato){
       return localStorage.getItem(dato) ;
+    }
+
+    login(){
+      localStorage.setItem('login', 'true');
     }
 
 
