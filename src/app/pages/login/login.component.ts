@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
   on:boolean=false;
   private POST = 'administracion/appVisitas/autenticarColaborador/';
   private DATOSEDE = 'administracion/appVisitas/datosLogin/';
-  private VALIDAR_CORREO='administracion/appVisitas/validarCorreo/';
+  private VALIDAR_CORREO='administracion/appVisitas/autenticarPorCorreo/';
   constructor(public afAuth: AngularFireAuth, public AuthService:AuthService,private router: Router, private BaseService: BaseService,public Alertas:AlertasService , private LocalStorageService:LocalStorageService) {
     this.dataC = new FormGroup({
       cedula: new FormControl('', Validators.required),
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         this.LocalStorageService.postDatos(cedula,res.DATOS);
         this.LocalStorageService.login();
         this.Alertas.alertCe('success','Bienvenido '+ res.DATOS );
-        this.router.navigateByUrl("registrar");
+         this.router.navigateByUrl("registrar");
         location.reload();
       } else {
         this.Alertas.alertOk('error',res.MENSAJE);
@@ -72,19 +72,19 @@ export class LoginComponent implements OnInit {
     this.AuthService.loginGoogleUser().then((res) => {
         
         //console.log(res);
-        this.validarPorCorreo(res.email,res.displayName);
+        this.validarPorCorreo(res.email);
         // this.router.navigateByUrl('registrar');
         // this.Alertas.alertCe('success','Bienvenido ');
       }).catch(err => console.log('err', err.message));
   }}
 
-  validarPorCorreo(correo,nombre){
+  validarPorCorreo(correo){
     this.BaseService.postJson({ 'correo': correo }, this.VALIDAR_CORREO).subscribe((res: any) => {
       if (res.RESPUESTA=='EXITO') {
         this.LocalStorageService.post(this.dataC.value.sede);
-        this.LocalStorageService.postDatos("",nombre);
+        this.LocalStorageService.postDatos("",res.DATOS);
         this.LocalStorageService.login();
-        this.Alertas.alertCe('success','Bienvenido');
+        this.Alertas.alertCe('success','Bienvenido '+res.DATOS);
         this.router.navigateByUrl("registrar");
         location.reload();
       } else {

@@ -77,7 +77,8 @@
               "node_modules/arrive/src/arrive.js",
               "node_modules/moment/moment.js",
               "node_modules/chartist/dist/chartist.js",
-              "node_modules/bootstrap-notify/bootstrap-notify.js"
+              "node_modules/bootstrap-notify/bootstrap-notify.js",
+              "node_modules/crypto-js/crypto-js.js"
             ],
             "styles": [
               "src/styles.css",

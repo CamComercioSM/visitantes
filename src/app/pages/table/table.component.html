@@ -1,35 +1,61 @@
 <div class="row">
   <div class="col-md-12">
     <div class="card card-plain">
-      <div class="card-header text-center d-flex justify-content-center">
-        <button  *ngIf="estadoVisitante=='ACTIVO'" class="btn bg-danger" (click)="filtrarPorEstadoVisitante('FINALIZADA')">VER FINALIZADAS</button>
-        <button *ngIf="estadoVisitante=='FINALIZADA'" class="btn bg-success" (click)="filtrarPorEstadoVisitante('ACTIVO')">VER ACTIVAS</button>
+      <!-- <div class="card-header text-center d-flex justify-content-center">
+        <button  *ngIf="estadoVisitante=='ACTIVO'" class="btn btn-sm bg-danger" (click)="filtrarPorEstadoVisitante('FINALIZADA')">VER FINALIZADAS</button>
+        <button *ngIf="estadoVisitante=='FINALIZADA'" class="btn btn-sm bg-success" (click)="filtrarPorEstadoVisitante('ACTIVO')">VER ACTIVAS</button>
       </div>
-      <div class="card-header text-center d-flex justify-content-center">
-        <div class="col-sm-5 my-1  d-flex justify-content-center">
+      <hr /> -->
+      <!-- <div class="row">
+        <h5>Filtradores</h5>
+      </div>
+    <div class="col-md-3">
           <input type="text" class="form-control" id="inlineFormInputName" placeholder="Buscador" name="filtroPost"
             [(ngModel)]="filtroPost">
-        </div>
-      </div>
-     
-      <hr />
+        </div> 
+    -->
+    <div class="row text-center d-flex justify-content-center">
+      <h6 *ngIf="!activarBusqueda">Filtradores por estado  de carnet de visitas<strong *ngIf="estadoVisitante=='ACTIVO'"> ACTIVAS</strong> <strong *ngIf="estadoVisitante=='FINALIZADA'"> FINALIZADAS</strong></h6>
+      <h6 *ngIf="activarBusqueda">Buscador de visitas <strong *ngIf="estadoVisitante=='ACTIVO'"> ACTIVAS</strong> <strong *ngIf="estadoVisitante=='FINALIZADA'"> FINALIZADAS</strong></h6>
+    </div>
       <div class="row text-center d-flex justify-content-center">
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-         
-          <label class="btn btn-secondary">
+
+        <div class="card-header   text-center d-flex justify-content-center">
+          
+        <div class="btn-group btn-group-toggle m-0 p-0 " data-toggle="buttons">
+          <label class="btn btn-secondary" *ngIf="!activarBusqueda">
           <span class="badge badge-light">{{todos}}</span>
             <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrar('TODOS')" > Todos
           </label>
-          <label class="btn btn-secondary">
+          <label class="btn btn-secondary" *ngIf="!activarBusqueda">
             <span class="badge badge-light">{{entregados}}</span>
             <input type="radio" name="options" id="option3" autocomplete="off" (click)="filtrar('ENTREGADO')">
             Entregados
           </label>
-          <label class="btn btn-secondary">
+          <label class="btn btn-secondary" *ngIf="!activarBusqueda">
             <span class="badge badge-light">{{devueltos}}</span>
             <input type="radio" name="options" id="option2" autocomplete="off" (click)="filtrar('DEVUELTO')"> Devueltos
           </label>
+          <label class="btn btn-secondary " *ngIf="activarBusqueda">
+            <input type="text" class="form-control" id="inlineFormInputName" placeholder="Buscador" name="filtroPost"
+            [(ngModel)]="filtroPost">
+          </label>
+          <label class="btn btn-secondary bg-primary colorBlanco" *ngIf="!activarBusqueda">
+            <input type="radio" name="options" id="option12" autocomplete="off" (click)="activarBuscador()"  ><i class="nc-icon nc-zoom-split "></i>
+          </label>
+          <label class="btn btn-secondary bg-primary colorBlanco" *ngIf="activarBusqueda">
+            <input type="radio" name="options" id="option12" autocomplete="off"(click)="desactivarBuscador()"  ><i class="nc-icon nc-badge "></i>
+          </label>
+          <label class="btn btn-secondary bg-danger colorBlanco" *ngIf="estadoVisitante=='ACTIVO'">
+            <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrarPorEstadoVisitante('FINALIZADA')" >FINALIZADAS
+          </label>
+          <label class="btn btn-secondary bg-success  colorBlanco" *ngIf="estadoVisitante=='FINALIZADA'" >
+            <input type="radio" name="options" id="option1" autocomplete="off" (click)="filtrarPorEstadoVisitante('ACTIVO')" >ACTIVAS
+          </label>
         </div>
+      </div>
+     
+      
       </div>
       <div class="card-body">
         <!-- table-wrapper-scroll-y my-custom-scrollbar -->

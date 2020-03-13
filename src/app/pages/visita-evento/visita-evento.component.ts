@@ -17,6 +17,7 @@ export class VisitaEventoComponent implements OnInit {
 
   public visitas = [];
   vacio: boolean = false;
+  vacio2:boolean=false;
   public VISITATOL = [];
   p: number = 1;
   filtroPost = '';
@@ -59,11 +60,11 @@ export class VisitaEventoComponent implements OnInit {
     let sedeID = this.LocalStorageService.get();
     this.BaseService.postJson({ 'sedeID': sedeID },this.GET_EVENTOS_DATOS).subscribe((res: any) => {
       if (res.RESPUESTA == 'EXITO') {
-        if (res.DATOS==null || res.DATOS.length == 0) {
+        if (res.DATOS==null || res.DATOS.length == 0 ) {
           this.Alertas.alertSu('info', 'No hay eventos en el momento');
           this.vacio = true;
         } else {
-           console.log(res.DATOS);
+           //console.log(res.DATOS);
            this.eventosTodos=res.DATOS;
            //alert(this.eventosTodos[0].eventoFCHINICIO);
            this.infoEvento();
@@ -80,10 +81,12 @@ export class VisitaEventoComponent implements OnInit {
      if (selectEvento != undefined && this.selectAnterior != selectEvento && selectEvento!=" ") {
      if (selectEvento=='1') {
       this.eventoSelec=this.eventosTodos[0];
+      this.esVacioAsistentes(this.eventoSelec.asistentes);
      }else{
       let filtro= this.eventosTodos.filter(res => selectEvento == res.eventoID);
       if (this.eventoSelec.length != 0) {
         this.eventoSelec=filtro[0];
+        this.esVacioAsistentes(this.eventoSelec.asistentes);
       } else {
         this.vacio = true;
         this.Alertas.alertSu('info', 'No hay eventos en el momento');
@@ -93,33 +96,10 @@ export class VisitaEventoComponent implements OnInit {
      }
   }
 
-  // filtrar(select) {
-  //   this.asistentes = this.asistentesTodos.filter(res => select == res.eventoID);
-  //   if (this.asistentes.length == 0) {
-  //     this.vacio = true;
-  //     this.Alertas.alertSu('info', 'No hay eventos en el momento');
-  //   }
-  // }
-
-  // getAsistentes() {
-  //   this.BaseService.getJson(this.GET_ASISTENTES).subscribe((res: any) => {
-  //     if (res.RESPUESTA == 'EXITO') {
-  //       console.log(res);
-  //       if (res.DATOS.Asistentes.length == 0) {
-  //         this.vacio = true;
-  //         this.Alertas.alertSu('info', 'No hay eventos en el momento');
-  //       } else {
-  //         console.log(res);
-          
-  //         this.vacio = false;
-  //         this.asistentesTodos = res.DATOS.Asistentes;
-  //         this.asistentes = res.DATOS.Asistentes;
-  //       }
-  //     } else {
-  //       this.Alertas.alertOk('error', res.MENSAJE);
-  //     }
-  //   });
-  // }
+  esVacioAsistentes(array) {
+    if (array.length == 0) { this.vacio2 = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
+  }
+ 
   ModalcambiarEstados(eventoID,eventoAsistenteID,personaID){
 
       const swalWithBootstrapButtons = Swal.mixin({
@@ -172,7 +152,7 @@ export class VisitaEventoComponent implements OnInit {
     
     let visitaNUMCARNET=formValues;
     if(visitaNUMCARNET){
-      console.log(visitaNUMCARNET);
+      
       this.cambiarEstados(eventoID,eventoAsistenteID,personaID,this.ENTREGADO,visitaNUMCARNET);
       
     }

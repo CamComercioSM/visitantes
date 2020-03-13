@@ -91,7 +91,7 @@ export class RegistrarComponent implements AfterViewInit {
   }
 
   public cambiarDispositivo(idDispositivo) {
-    console.log(idDispositivo);
+    
     this.apagar();
     this.prender(idDispositivo);
   }
@@ -111,7 +111,7 @@ export class RegistrarComponent implements AfterViewInit {
         track.stop();
       });
     } catch (error) {
-      console.log(error);
+    
     }
   }
 
@@ -124,7 +124,7 @@ export class RegistrarComponent implements AfterViewInit {
   buscar(){
     this.buscarOn=true;
     if(this.data.value.cedula!=""){
-      console.log(this.data.value.cedula);
+      
       this.BaseService.postJson({
         'personaIDENTIFICACION': this.data.value.cedula,
       }, this.BUSCARDATOS).subscribe((res: any) => {
@@ -164,7 +164,6 @@ export class RegistrarComponent implements AfterViewInit {
         'sedeID': sede,
         'tipoIdentificacionID': this.data.value.tipoIdentificacion,
         'personaIDENTIFICACION': this.data.value.cedula,
-        'personaRAZONSOCIAL': this.data.value.nombre + ' ' + this.data.value.apellido,
         'visitaTIPO':"SIN CITA PREVIA",
         'visitaESTADOCARNET': this.data.value.id_carnet==""? "SIN CARNET" : "ENTREGADO",
         'visitaMOTIVO':this.data.value.visitaMOTIVO,

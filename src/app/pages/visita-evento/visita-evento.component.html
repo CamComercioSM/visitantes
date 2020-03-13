@@ -47,7 +47,7 @@
               
               
             </thead>
-            <tbody *ngIf="eventoSelec.asistentes.length>=1">
+            <tbody *ngIf="eventoSelec.asistentes.length>=1  ">
               <tr
                 *ngFor="let asistente of eventoSelec.asistentes | filtro:filtroPost| paginate: { itemsPerPage: 50, currentPage: p };let i = index">
                 <td class="bg-warning text-center"  >
@@ -69,14 +69,14 @@
 
           </table>
           <pagination-controls *ngIf="eventoSelec.asistentes.length>=1  " (pageChange)="p = $event"></pagination-controls>
-          <div *ngIf="eventoSelec.asistentes.length ==0 && !vacio" class=" w-100 ">
+          <div *ngIf="eventoSelec.asistentes.length ==0 && !vacio2" class=" w-100 ">
             <div class="sonar-wrapper">
               <div class="sonar-emitter">
                 <div class="sonar-wave"></div>
               </div>
             </div>
           </div>
-          <div *ngIf="eventoSelec.asistentes.length ==0 && vacio" class=" w-100  text-center">
+          <div *ngIf="eventoSelec.asistentes.length ==0 && vacio2" class=" w-100  text-center">
             <h4>No hay campos en el momento</h4>
           </div>
         </div>

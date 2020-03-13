@@ -26,7 +26,7 @@ export class TableComponent implements OnInit {
   estadoVisitante: string = 'ACTIVO';
   public arrayFinalizadas = [];
   public arrayActivas = [];
-
+  activarBusqueda=false;
   GET_VISITAS_ACTIVAS = 'administracion/appVisitas/listadoVisitasActivas/';
   GET_VISITAS_FINALIZADAS = 'administracion/appVisitas/listadoVisitasFinalizadas/';
   ACTUALIZAR_ESTADOS = 'administracion/appVisitas/cambiarEstadosCarnetYVisitante/';
@@ -54,7 +54,6 @@ export class TableComponent implements OnInit {
   getVisitasActivas() {
     let sede = this.LocalStorageService.get();
     this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS_ACTIVAS).subscribe((res: any) => {
-      console.log(res);
       
       if (res.RESPUESTA == 'EXITO') {
         this.arrayActivas = res.DATOS;
@@ -80,7 +79,6 @@ export class TableComponent implements OnInit {
       if (res.RESPUESTA == 'EXITO') {
 
         this.arrayFinalizadas = res.DATOS;
-         console.log(this.arrayFinalizadas);
          
       } else {
         this.Alertas.alertOk('error', res.MENSAJE);
@@ -133,6 +131,14 @@ export class TableComponent implements OnInit {
         "<img src='" + base64 + "' id='img' alt='foto' class='img-circle img-no-padding img-responsive'>",
       showCloseButton: true
     })
+  }
+
+  activarBuscador(){
+    this.activarBusqueda=true;
+  }
+
+  desactivarBuscador(){
+    this.activarBusqueda=false;
   }
 
   ModalcambiarEstados(visitaID, visitaEstadoVisitante, i, visitaESTADOCARNET) {
@@ -277,16 +283,14 @@ export class TableComponent implements OnInit {
     this.visitas[i].visitaFCHSALIDA = new Date();
     this.arrayActivas[i].visitaFCHSALIDA = new Date();
     this.arrayFinalizadas.push(this.visitas[i]);
-    console.log(this.arrayActivas);
-    console.log(this.visitas);
+    
    
-    console.log('eliminadas');
+    
     //  delete this.arrayActivas[i];
     // delete this.visitas[i];
     //this.visitas.splice(i, 1);
     //this.arrayActivas.splice(i, 1);
-     console.log(this.arrayActivas);
-     console.log(this.visitas);
+     
      this.getVisitasActivas();
 
     // this.visitas=this.arrayActivas;
