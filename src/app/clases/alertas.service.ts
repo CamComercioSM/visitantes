@@ -11,7 +11,7 @@ export class AlertasService {
   alertOk(icono, mensaje) {
     return Swal.fire({
       icon: icono,
-      text: mensaje,
+      html: mensaje,
     });
   }
 

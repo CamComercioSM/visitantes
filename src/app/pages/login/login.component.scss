@@ -84,7 +84,7 @@ box-shadow: 10px 10px 144px 3px rgba(0,0,0,0.51);
   NOTE: add browser prefixes where needed.
 */
 .sonar-wave {
-  animation: sonarWave 1s linear infinite;
+  animation: sonarWave 0.5s linear infinite;
 }
 
 @keyframes sonarWave {

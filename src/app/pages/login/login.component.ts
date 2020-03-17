@@ -34,8 +34,10 @@ export class LoginComponent implements OnInit {
   }
 
   datosSede() {
+    this.on=true;
     this.BaseService.getJson(this.DATOSEDE).subscribe((res: any) => {
       this.sede=res.DATOS;
+      this.on=false;
     });
   }
 
