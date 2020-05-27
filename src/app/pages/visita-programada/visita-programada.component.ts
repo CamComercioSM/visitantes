@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { AlertasService } from 'app/clases/alertas.service';
 import { NCarnetService } from 'app/servicios/ncarnet.service';
 import { LocalStorageService } from 'app/servicios/local-storage.service';
+import { DatosVisitasService } from 'app/servicios/datos-visitas.service';
 
 @Component({
   selector: 'app-visita-programada',
@@ -38,12 +39,12 @@ export class VisitaProgramadaComponent implements OnInit {
   SIN_CARNET='SIN CARNET';
   PENDIENTE='PENDIENTE';
 
-  constructor( private LocalStorageService:LocalStorageService ,public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public NCarnetService:NCarnetService) {
+  constructor( private DatosVisitasService: DatosVisitasService , private LocalStorageService:LocalStorageService ,public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public NCarnetService:NCarnetService) {
 
   }
   ngOnInit() {
     this.getVisitas();
-    
+
   }
   // filtrar por fecha
   // filtraFecha() {
@@ -98,10 +99,10 @@ export class VisitaProgramadaComponent implements OnInit {
         this.visitas = res.DATOS;
         this.VISITATOL = res.DATOS;
       }
-     
+
     });
   }
-  
+
   esVacio(array) {
     if (array.length == 0) { this.vacio = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
   }
@@ -117,7 +118,7 @@ export class VisitaProgramadaComponent implements OnInit {
         },
         buttonsStyling: false
       })
-  
+
       swalWithBootstrapButtons.fire({
         title: 'Se entrego carnet?',
         icon: 'question',
@@ -161,9 +162,19 @@ export class VisitaProgramadaComponent implements OnInit {
       this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i,visitaNUMCARNET);
       //console.log(visitaNUMCARNET);
     }
-    
+
   }
   cambiarEstados(visitaID,visitaEstadoCarnet,visitaEstadoVisitante, i,visitaNUMCARNET=null) {
+
+    this.DatosVisitasService.post({
+      'visitaID': visitaID,
+      'visitaEstadoCarnet': visitaEstadoCarnet,
+      'visitaNUMCARNET': visitaNUMCARNET,
+      'visitaEstadoVisitante':visitaEstadoVisitante,
+      'visitaTIPO':"PROGRAMADA"
+    });
+    this.router.navigate(['/autoreporte','PROGRAMADA']);
+    /*
     this.BaseService.postJson({
       'visitaID': visitaID,
       'visitaEstadoCarnet': visitaEstadoCarnet,
@@ -182,7 +193,7 @@ export class VisitaProgramadaComponent implements OnInit {
       } else {
         this.Alertas.alertOk('error', res.MENSAJE);
       }
-    });
+    });*/
   }
 
 

@@ -8,6 +8,7 @@ import { AlertasService } from 'app/clases/alertas.service';
 import { isUndefined } from 'util';
 import { LocalStorageService } from 'app/servicios/local-storage.service';
 import { NCarnetService } from 'app/servicios/ncarnet.service';
+import { DatosVisitasService } from 'app/servicios/datos-visitas.service';
 @Component({
   selector: 'app-visita-evento',
   templateUrl: './visita-evento.component.html',
@@ -28,7 +29,7 @@ export class VisitaEventoComponent implements OnInit {
   selectAnterior;
 
   on=false;
- 
+
   // informacion de evento
   eventoDESCRIPCION;
   eventoFCHINICIO ;
@@ -41,14 +42,14 @@ export class VisitaEventoComponent implements OnInit {
   public eventosTodos:any=[];
   private POST = 'administracion/appVisitas/guardarYActivarVisita/';
   GET_EVENTOS_DATOS= 'administracion/appVisitas/listadoEventosYAsistentes/';
- 
-  
+
+
   N_carnet=[];
   DEVUELTO='DEVUELTO';
   ENTREGADO='ENTREGADO';
   SIN_CARNET='SIN CARNET';
   PENDIENTE='PENDIENTE';
-  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService, public NCarnetService:NCarnetService) {
+  constructor( private DatosVisitasService: DatosVisitasService ,public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService, public NCarnetService:NCarnetService) {
 
   }
 
@@ -77,7 +78,7 @@ export class VisitaEventoComponent implements OnInit {
   }
 
   infoEvento(selectEvento='1') {
-   
+
      if (selectEvento != undefined && this.selectAnterior != selectEvento && selectEvento!=" ") {
      if (selectEvento=='1') {
       this.eventoSelec=this.eventosTodos[0];
@@ -99,7 +100,7 @@ export class VisitaEventoComponent implements OnInit {
   esVacioAsistentes(array) {
     if (array.length == 0) { this.vacio2 = true; this.Alertas.alertSu('info', 'No hay campos en el momento'); }
   }
- 
+
   ModalcambiarEstados(eventoID,eventoAsistenteID,personaID){
 
       const swalWithBootstrapButtons = Swal.mixin({
@@ -109,7 +110,7 @@ export class VisitaEventoComponent implements OnInit {
         },
         buttonsStyling: false
       })
-  
+
       swalWithBootstrapButtons.fire({
         title: 'Se entrego carnet?',
         icon: 'question',
@@ -128,7 +129,7 @@ export class VisitaEventoComponent implements OnInit {
           this.cambiarEstados(eventoID,eventoAsistenteID,personaID,this.SIN_CARNET);
         }
       });
-  
+
   }
 
   nCarnet(){
@@ -149,34 +150,48 @@ export class VisitaEventoComponent implements OnInit {
       inputPlaceholder: 'Seleccione el numero',
       showCancelButton: true
     });
-    
+
     let visitaNUMCARNET=formValues;
     if(visitaNUMCARNET){
-      
+
       this.cambiarEstados(eventoID,eventoAsistenteID,personaID,this.ENTREGADO,visitaNUMCARNET);
-      
+
     }
-    
+
   }
   cambiarEstados(eventoID,eventoAsistenteID,personaID,visitaESTADOCARNET,visitaNUMCARNET=null) {
     let sedeID = this.LocalStorageService.get();
-    this.BaseService.postJson({
-       'visitaTIPO': 'EVENTOS' ,
-        'eventoID': eventoID,
-       'eventoAsistenteID': eventoAsistenteID,
-       'sedeID': sedeID,
-       'personaID': personaID,
-       'visitaNUMCARNET': visitaNUMCARNET,
-       'visitaESTADOCARNET': visitaESTADOCARNET,
-       'colaboradorID': this.eventoSelec.colaboradorID
-     }, this.POST).subscribe((res: any) => {
+
+    this.DatosVisitasService.post({
+      'visitaTIPO': 'EVENTOS' ,
+       'eventoID': eventoID,
+      'eventoAsistenteID': eventoAsistenteID,
+      'sedeID': sedeID,
+      'personaID': personaID,
+      'visitaNUMCARNET': visitaNUMCARNET,
+      'visitaESTADOCARNET': visitaESTADOCARNET,
+      'colaboradorID': this.eventoSelec.colaboradorID
+    });
+    this.router.navigate(['/autoreporte','EVENTOS']);
+
+
+    /*this.BaseService.postJson({
+      'visitaTIPO': 'EVENTOS' ,
+       'eventoID': eventoID,
+      'eventoAsistenteID': eventoAsistenteID,
+      'sedeID': sedeID,
+      'personaID': personaID,
+      'visitaNUMCARNET': visitaNUMCARNET,
+      'visitaESTADOCARNET': visitaESTADOCARNET,
+      'colaboradorID': this.eventoSelec.colaboradorID
+    }, this.POST).subscribe((res: any) => {
        if (res.RESPUESTA=='EXITO') {
          this.Alertas.alertSu('success', 'Registro Exitoso');
          this.router.navigateByUrl('table');
        }else {
          this.Alertas.alertOk('error',res.MENSAJE);
-       }});
-      
+       }});*/
+
       }
 
 

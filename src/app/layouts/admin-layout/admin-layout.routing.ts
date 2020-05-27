@@ -8,6 +8,7 @@ import { TrabajadorComponent } from 'app/pages/trabajador/trabajador.component';
 import { LoginComponent } from 'app/pages/login/login.component';
 import { VisitaProgramadaComponent } from '../../pages/visita-programada/visita-programada.component';
 import { VisitaEventoComponent } from 'app/pages/visita-evento/visita-evento.component';
+import { AutoReporteComponent } from 'app/pages/auto-reporte/auto-reporte.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -16,4 +17,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'trabajador', component: TrabajadorComponent },
     { path: 'visitaProgramada', component: VisitaProgramadaComponent },
     { path: 'VisitaEvento', component: VisitaEventoComponent },
+    { path: 'autoreporte/:tipoVisita', component: AutoReporteComponent }
 ];

@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'app/servicios/local-storage.service';
 import { AlertasService } from 'app/clases/alertas.service';
+import { DatosVisitasService } from 'app/servicios/datos-visitas.service';
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -30,7 +31,7 @@ export class RegistrarComponent implements AfterViewInit {
   data: FormGroup;
   on:boolean=false;
   buscarOn:boolean=false;
-  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService) {
+  constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService, public DatosVisitasService:DatosVisitasService ) {
     this.data = new FormGroup({
       nombre: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
       apellido: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
@@ -91,7 +92,7 @@ export class RegistrarComponent implements AfterViewInit {
   }
 
   public cambiarDispositivo(idDispositivo) {
-    
+
     this.apagar();
     this.prender(idDispositivo);
   }
@@ -111,7 +112,7 @@ export class RegistrarComponent implements AfterViewInit {
         track.stop();
       });
     } catch (error) {
-    
+
     }
   }
 
@@ -124,7 +125,7 @@ export class RegistrarComponent implements AfterViewInit {
   buscar(){
     this.buscarOn=true;
     if(this.data.value.cedula!=""){
-      
+
       this.BaseService.postJson({
         'personaIDENTIFICACION': this.data.value.cedula,
       }, this.BUSCARDATOS).subscribe((res: any) => {
@@ -147,9 +148,11 @@ export class RegistrarComponent implements AfterViewInit {
   }
 
   registrar() {
+
+
     this.on=true;
     if (!this.data.valid) {
-   
+
         this.Alertas.alertOk('error','Ingrese los datos faltantes');
         this.on=false;
     } else {
@@ -157,7 +160,22 @@ export class RegistrarComponent implements AfterViewInit {
         this.capture();
       }
       let sede = this.LocalStorageService.get();
-      this.BaseService.postJson({
+
+     this.DatosVisitasService.post({
+      'visitaNUMCARNET': this.data.value.id_carnet,
+      'visitaFOTO': this.photo,
+      'colaboradorID': this.data.value.visitar_a,
+      'sedeID': sede,
+      'tipoIdentificacionID': this.data.value.tipoIdentificacion,
+      'personaIDENTIFICACION': this.data.value.cedula,
+      'visitaTIPO':"SIN CITA PREVIA",
+      'visitaESTADOCARNET': this.data.value.id_carnet==""? "SIN CARNET" : "ENTREGADO",
+      'visitaMOTIVO':this.data.value.visitaMOTIVO,
+      'personaPRIMERNOMBRE':this.data.value.nombre ,
+      'personaPRIMERAPELLIDO':this.data.value.apellido
+    });
+    this.router.navigate(['/autoreporte','SIN CITA PREVIA']);
+      /*this.BaseService.postJson({
         'visitaNUMCARNET': this.data.value.id_carnet,
         'visitaFOTO': this.photo,
         'colaboradorID': this.data.value.visitar_a,
@@ -179,7 +197,7 @@ export class RegistrarComponent implements AfterViewInit {
           this.Alertas.alertOk('error',res.MENSAJE);
         }
 
-      });
+      });*/
     }
   }
 

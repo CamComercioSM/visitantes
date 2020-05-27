@@ -14,6 +14,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RegistrarComponent } from '../../pages/registrar/registrar.component';
 import { TrabajadorComponent } from '../../pages/trabajador/trabajador.component';
 import {VisitaProgramadaComponent} from '../../pages/visita-programada/visita-programada.component';
+import { AutoReporteComponent } from 'app/pages/auto-reporte/auto-reporte.component';
 import { HttpClientModule } from '@angular/common/http';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { FiltroPipe } from '../../pipes/filtro.pipe';
@@ -28,6 +29,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import "firebase/firestore";
 import  "firebase/auth";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -48,7 +50,8 @@ import  "firebase/auth";
     TrabajadorComponent,
     VisitaProgramadaComponent,
     FiltroPipe,
-    VisitaEventoComponent
+    VisitaEventoComponent,
+    AutoReporteComponent
     // LoginComponent,
   ],
 
