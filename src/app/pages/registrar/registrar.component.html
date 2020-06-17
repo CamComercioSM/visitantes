@@ -1,152 +1,157 @@
 <div class="opacity" *ngIf="on">
-    <div class="sonar-wrapper">
-        <div class="sonar-emitter">
-            <div class="sonar-wave"></div>
-        </div>
+  <div class="sonar-wrapper">
+    <div class="sonar-emitter">
+      <div class="sonar-wave"></div>
     </div>
+  </div>
 </div>
 <div class="row d-flex justify-content-center">
 
-    <div class="card">
-        <!-- <div class="card-header text-center">
+  <div class="card">
+    <!-- <div class="card-header text-center">
         <h4 class="card-title">
             Visitante
         </h4>
     </div> -->
 
 
-        <div class="card-body">
+    <div class="card-body">
 
-            <div id="app" class="mb-3" *ngIf="!photo">
-                <div><video #video id="video" class="w-100" autoplay></video></div>
-                <div>
-                    <button id="snap" class="btn btn-danger" *ngIf="OffOn" (click)="apagar()">Apagar</button>
-                    <button id="snap" class="btn btn-success" *ngIf="!OffOn" (click)="prender()">Prender</button>
-                </div>
-                <canvas #canvas id="canvas" width="600" height="480"></canvas>
-            </div>
-            <div class="mb-3 text-center" *ngIf="photo">
-                <img src="{{photo}}" id="img" alt="foto" class=" img-circle img-no-padding img-responsive">
-            </div>
+      <div id="app" class="mb-3" *ngIf="!photo">
+        <div><video #video id="video" class="w-100" autoplay></video></div>
+        <div>
+          <button id="snap" class="btn btn-danger" *ngIf="OffOn" (click)="apagar()">Apagar</button>
+          <button id="snap" class="btn btn-success" *ngIf="!OffOn" (click)="prender()">Prender</button>
+        </div>
+        <canvas #canvas id="canvas" width="600" height="480"></canvas>
+      </div>
+      <div class="mb-3 text-center" *ngIf="photo">
+        <img src="{{photo}}" id="img" alt="foto" class=" img-circle img-no-padding img-responsive">
+      </div>
 
-            <ng-container *ngIf="dispositivosDeVideo.length>1">
-                <h4 class="text-center">Seleccionar Camara</h4>
-                <hr />
-                <div class="form-row text-center d-flex justify-content-center">
-                    <div class="form-group  ">
-                        <!-- <select  class="form-control"    name="dispositivosDeVideo">
+      <ng-container *ngIf="dispositivosDeVideo.length>1">
+        <h4 class="text-center">Seleccionar Camara</h4>
+        <hr />
+        <div class="form-row text-center d-flex justify-content-center">
+          <div class="form-group  ">
+            <!-- <select  class="form-control"    name="dispositivosDeVideo">
                         <option   *ngFor="let item of dispositivosDeVideo" [value]="item.deviceId"  >
-                            <a  class="btn btn-danger" (click)="cambiarDispositivo(item.deviceId)" >{{item.label}}</a> 
+                            <a  class="btn btn-danger" (click)="cambiarDispositivo(item.deviceId)" >{{item.label}}</a>
                         </option>
                     </select>  -->
 
-                        <button class="btn btn-danger" *ngFor="let item of dispositivosDeVideo" [value]="item.deviceId"
-                            (click)="cambiarDispositivo(item.deviceId)"> {{item.label}} </button>
-                    </div>
-                </div>
-            </ng-container>
-            <hr />
-            <h4 class="text-center">Datos de ingreso</h4>
-            <hr />
+            <button class="btn btn-danger" *ngFor="let item of dispositivosDeVideo" [value]="item.deviceId"
+              (click)="cambiarDispositivo(item.deviceId)"> {{item.label}} </button>
+          </div>
+        </div>
+      </ng-container>
+      <hr />
+      <h4 class="text-center">Datos de ingreso</h4>
+      <hr />
 
-            <form class="col-12" [formGroup]="data" (ngSubmit)="registrar()">
-                <div class="form-row  ">
-                    <div class="form-group col-md-5">
-                        <label for="inputEmail4">Tipo de identificación <label class="text-danger ">*</label> </label>
-                        <select class="form-control " formControlName="tipoIdentificacion" name="tipoIdentificacion">
-                            <option value="" selected>Elegir Tipo de identificación</option>
-                            <option *ngFor="let item of tipoIdentificacion" [value]="item.tipoIdentificacionID">
-                                {{item.tipoIdentificacionTITULO}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputPassword4">Cedula <label class="text-danger ">*</label></label>
-                        <input type="text" class="form-control" name="cedula" formControlName="cedula"
-                            placeholder="Cedula">
-                    </div >
-                    <div class="form-group col-md-1 text-center pt-2 d-flex justify-content-center">
-                        <!-- <label for="inputPassword4">Buscar</label> -->
-                        <div *ngIf="buscarOn" class="pl-0 pr-5 ml-0 d-flex justify-content-center" >
-                            <div   id="preloader_1" class="mt-4 pl-0 pr-0 ml-0 mb-3">
-                                <span></span>
-                                  <span></span>
-                                  <span></span>
-                                  <span></span>
-                                  <span></span>
-                              </div>
-                        </div>
-                        <button *ngIf="!buscarOn" type="button" class="btn btn-sm btn-outline-success mt-4" (click)="buscar()"> <i class="nc-icon nc-zoom-split "></i></button>
-                    </div>
+      <form class="col-12" [formGroup]="data" (ngSubmit)="registrar()">
+        <div class="form-row  ">
+          <div class="form-group col-md-5">
+            <label for="inputEmail4">Tipo de identificación <label class="text-danger ">*</label> </label>
+            <select class="form-control " formControlName="tipoIdentificacion" name="tipoIdentificacion">
+              <option value="" selected>Elegir Tipo de identificación</option>
+              <option *ngFor="let item of tipoIdentificacion" [value]="item.tipoIdentificacionID">
+                {{item.tipoIdentificacionTITULO}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Cedula <label class="text-danger ">*</label></label>
+            <input type="text" class="form-control" name="cedula" formControlName="cedula" placeholder="Cedula">
+          </div>
+          <div class="form-group col-md-1 text-center pt-2 d-flex justify-content-center">
+            <!-- <label for="inputPassword4">Buscar</label> -->
+            <div *ngIf="buscarOn" class="pl-0 pr-5 ml-0 d-flex justify-content-center">
+              <div id="preloader_1" class="mt-4 pl-0 pr-0 ml-0 mb-3">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <button *ngIf="!buscarOn" type="button" class="btn btn-sm btn-outline-success mt-4" (click)="buscar()"> <i
+                class="nc-icon nc-zoom-split "></i></button>
+          </div>
 
-                </div>
+        </div>
 
-                <div class="form-row ">
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">Primer Nombre <label class="text-danger ">*</label></label>
-                        <input type="text" class="form-control" name="nombre" formControlName="nombre"
-                            placeholder="Nombre">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">Primer Apellido <label class="text-danger ">*</label></label>
-                        <input type="text" class="form-control" name="apellido" formControlName="apellido"
-                            placeholder="Apellido">
-                    </div>
+        <div class="form-row ">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Primer Nombre <label class="text-danger ">*</label></label>
+            <input type="text" class="form-control" name="nombre" formControlName="nombre" placeholder="Nombre">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Primer Apellido <label class="text-danger ">*</label></label>
+            <input type="text" class="form-control" name="apellido" formControlName="apellido" placeholder="Apellido">
+          </div>
 
 
-                </div>
+        </div>
 
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="numeroCelular">Numero Celular <label class="text-danger ">*</label></label>
+            <input type="number" class="form-control" name="numeroCelular" id="numeroCelular"
+              formControlName="numeroCelular" placeholder="Celular">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">N° Carnet</label>
+            <select class="form-control" name="id_carnet" formControlName="id_carnet" placeholder="N° Carnet">
+              <option value="" selected>Elegir N°Carnet </option>
+              <option *ngFor="let item of N_carnet" [value]="item">
+                {{item}}</option>
+            </select>
+          </div>
+        </div>
 
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="inputPassword4">Colaborador a visitar <label class="text-danger ">*</label></label>
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="inputEmail4">N° Carnet</label>
-                        <select class="form-control" name="id_carnet" formControlName="id_carnet"
-                            placeholder="N° Carnet">
-                            <option value="" selected>Elegir N°Carnet </option>
-                            <option *ngFor="let item of N_carnet" [value]="item">
-                                {{item}}</option>
-                        </select>
-                    </div>
+            <select class="form-control" formControlName="visitar_a" name="visitar_a">
+              <option value="" selected>Elegir colaborador</option>
+              <option *ngFor="let item of colaboradores" [value]="item.colaboradorID">
+                {{item.personaRAZONSOCIAL|titlecase }}</option>
+            </select>
+          </div>
 
-                    <div class="form-group col-md-6">
-                        <label for="inputPassword4">Colaborador a visitar <label class="text-danger ">*</label></label>
+        </div>
 
-                        <select class="form-control" formControlName="visitar_a" name="visitar_a">
-                            <option value="" selected>Elegir colaborador</option>
-                            <option *ngFor="let item of colaboradores" [value]="item.colaboradorID">
-                                {{item.personaRAZONSOCIAL|titlecase }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row ">
-                    <div class="form-group col-12">
-                        <label for="exampleFormControlTextarea1">Motivo</label>
-                        <textarea class="form-control" formControlName="visitaMOTIVO" name="visitaMOTIVO" id="exampleFormControlTextarea1" rows="2"></textarea>
-                    </div>
-                </div>
-                <hr>
+        <div class="form-row ">
+          <div class="form-group col-12">
+            <label for="exampleFormControlTextarea1">Motivo</label>
+            <textarea class="form-control" formControlName="visitaMOTIVO" name="visitaMOTIVO"
+              id="exampleFormControlTextarea1" rows="2"></textarea>
+          </div>
+        </div>
+        <hr>
 
-                <div  class="form-row d-flex justify-content-center">
+        <div class="form-row d-flex justify-content-center">
 
-                    <button *ngIf="!on" type="button" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+          <button *ngIf="!on" type="button" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
 
-                    <button *ngIf="!on"  type="submit" [disabled]="!data.valid" class="btn btn-primary">Capturar y Guardar</button>
-                    <div *ngIf="on" class="pl-0 pr-5 ml-0" >
-                        <div   id="preloader_1" class="mt-4 pl-0 pr-0 ml-0 mb-5">
-                            <span></span>
-                              <span></span>
-                              <span></span>
-                              <span></span>
-                              <span></span>
-                          </div>
-                    </div>
-                </div>
-                
-                
-            </form>
+          <button *ngIf="!on" type="submit" [disabled]="!data.valid" class="btn btn-primary">Siguiente</button>
+          <div *ngIf="on" class="pl-0 pr-5 ml-0">
+            <div id="preloader_1" class="mt-4 pl-0 pr-0 ml-0 mb-5">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
         </div>
 
 
-
+      </form>
     </div>
+
+
+
+  </div>
 </div>

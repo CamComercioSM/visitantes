@@ -40,8 +40,8 @@ export class VisitaEventoComponent implements OnInit {
   //asistentes
   public eventoSelec:any=[];
   public eventosTodos:any=[];
-  private POST = 'administracion/appVisitas/guardarYActivarVisita/';
-  GET_EVENTOS_DATOS= 'administracion/appVisitas/listadoEventosYAsistentes/';
+  private POST = 'tienda-apps/appVisitas/guardarYActivarVisita/';
+  GET_EVENTOS_DATOS= 'tienda-apps/appVisitas/listadoEventosYAsistentes/';
 
 
   N_carnet=[];

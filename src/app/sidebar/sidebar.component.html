@@ -1,14 +1,19 @@
 
 <div class="sidebar-wrapper">
-  <div class="logo">
-    <a href="#" class="simple-text logo-mini">
-      <div class="logo-image-small">
-        <img src="assets/img/mariposa.png">
-      </div>
-    </a>
-    <a href="#" class="simple-text logo-normal">
-      CCSM Visitantes
-    </a> 
+  <div class="logo row">
+    <div class="col-md-12 d-flex justify-content-center mb-0 pb-0">
+      <a href="#" class="simple-text logo-mini text-center">
+        <div class="logo-image-small text-center">
+          <img src="assets/img/mariposa.png">
+        </div>
+      </a>
+    </div>
+    <div class="col-md-12 mb-0 pb-0">
+      <a href="#" class="simple-text logo-normal text-center">
+        Control de acceso
+      </a>
+    </div>
+
   </div>
     <ul class="nav">
         <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">

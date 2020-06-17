@@ -27,9 +27,9 @@ export class TableComponent implements OnInit {
   public arrayFinalizadas = [];
   public arrayActivas = [];
   activarBusqueda=false;
-  GET_VISITAS_ACTIVAS = 'administracion/appVisitas/listadoVisitasActivas/';
-  GET_VISITAS_FINALIZADAS = 'administracion/appVisitas/listadoVisitasFinalizadas/';
-  ACTUALIZAR_ESTADOS = 'administracion/appVisitas/cambiarEstadosCarnetYVisitante/';
+  GET_VISITAS_ACTIVAS = 'tienda-apps/appVisitas/listadoVisitasActivas/';
+  GET_VISITAS_FINALIZADAS = 'tienda-apps/appVisitas/listadoVisitasFinalizadas/';
+  ACTUALIZAR_ESTADOS = 'tienda-apps/appVisitas/cambiarEstadosCarnetYVisitante/';
 
   DESACTIVO = 'DESACTIVO';
   ACTIVO = 'ACTIVO';
@@ -54,7 +54,7 @@ export class TableComponent implements OnInit {
   getVisitasActivas() {
     let sede = this.LocalStorageService.get();
     this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS_ACTIVAS).subscribe((res: any) => {
-      
+
       if (res.RESPUESTA == 'EXITO') {
         this.arrayActivas = res.DATOS;
         this.visitas = this.arrayActivas;
@@ -79,7 +79,7 @@ export class TableComponent implements OnInit {
       if (res.RESPUESTA == 'EXITO') {
 
         this.arrayFinalizadas = res.DATOS;
-         
+
       } else {
         this.Alertas.alertOk('error', res.MENSAJE);
       }
@@ -233,7 +233,7 @@ export class TableComponent implements OnInit {
   }
 
   cambiarEstados(visitaID, visitaEstadoCarnet, visitaEstadoVisitante, i) {
-    
+
      this.BaseService.postJson({
        'visitaID': visitaID,
        'visitaEstadoCarnet': visitaEstadoCarnet,
@@ -242,7 +242,7 @@ export class TableComponent implements OnInit {
        if (res.RESPUESTA == 'EXITO') {
 
          this.Alertas.alertSu('success', 'Actualización Exitosa');
-         
+
         switch (visitaEstadoVisitante) {
             case this.ACTIVO:
               this.cambiarEstadoVisitante(i, this.ACTIVO);
@@ -270,7 +270,7 @@ export class TableComponent implements OnInit {
          // alert(i);
          // this.visitas.splice(i, 1);
          // this.VISITATOL.splice(i, 1);
-        
+
        } else {
         this.Alertas.alertOk('error', res.MENSAJE);
        }
@@ -283,14 +283,14 @@ export class TableComponent implements OnInit {
     this.visitas[i].visitaFCHSALIDA = new Date();
     this.arrayActivas[i].visitaFCHSALIDA = new Date();
     this.arrayFinalizadas.push(this.visitas[i]);
-    
-   
-    
+
+
+
     //  delete this.arrayActivas[i];
     // delete this.visitas[i];
     //this.visitas.splice(i, 1);
     //this.arrayActivas.splice(i, 1);
-     
+
      this.getVisitasActivas();
 
     // this.visitas=this.arrayActivas;

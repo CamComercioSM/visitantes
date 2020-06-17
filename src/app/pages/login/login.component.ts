@@ -19,9 +19,9 @@ export class LoginComponent implements OnInit {
   public sede = [];
   dataC: FormGroup;
   on:boolean=false;
-  private POST = 'administracion/appVisitas/autenticarColaborador/';
-  private DATOSEDE = 'administracion/appVisitas/datosLogin/';
-  private VALIDAR_CORREO='administracion/appVisitas/autenticarPorCorreo/';
+  private POST = 'tienda-apps/appVisitas/autenticarColaborador/';
+  private DATOSEDE = 'tienda-apps/appVisitas/datosLogin/';
+  private VALIDAR_CORREO='tienda-apps/appVisitas/autenticarPorCorreo/';
   constructor(public afAuth: AngularFireAuth, public AuthService:AuthService,private router: Router, private BaseService: BaseService,public Alertas:AlertasService , private LocalStorageService:LocalStorageService) {
     this.dataC = new FormGroup({
       cedula: new FormControl('', Validators.required),
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
         //   text: res.MENSAJE,
         // })
       }
-      
+
 
     });
 
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
       this.Alertas.alertOk('error','Ingrese la sede');
     }else{
     this.AuthService.loginGoogleUser().then((res) => {
-        
+
         //console.log(res);
         this.validarPorCorreo(res.email);
         // this.router.navigateByUrl('registrar');
@@ -103,5 +103,5 @@ export class LoginComponent implements OnInit {
   logoutUser() {
     this.AuthService.logoutUser();
   }
-  
+
 }

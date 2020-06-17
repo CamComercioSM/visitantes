@@ -22,7 +22,13 @@
                 Cedula
               </th>
               <th>
-                Estado
+                Disponibilidad
+              </th>
+              <th>
+                Estado Ult Reporte COVED19
+              </th>
+              <th>
+                Fecha Ult Reporte COVED19
               </th>
             </thead>
             <tbody *ngIf="trabajadores.length>1">
@@ -37,6 +43,12 @@
                 </td>
                 <td>
                   Disponible
+                </td>
+                <td>
+                  {{trabajador.autoreporteResultadoESTADO}}
+                </td>
+                <td>
+                  {{trabajador.autoreporteResultadoFCHCREACION}}
                 </td>
               </tr>
             </tbody>

@@ -13,8 +13,8 @@ import { DatosVisitasService } from 'app/servicios/datos-visitas.service';
   styleUrls: ['./registrar.component.scss']
 })
 export class RegistrarComponent implements AfterViewInit {
-  private POST = 'administracion/appVisitas/guardarYActivarVisita/';
-  private DATOFORMULARIO = 'administracion/appVisitas/datosFormulario/';
+  private POST = 'tienda-apps/appVisitas/guardarYActivarVisita/';
+  private DATOFORMULARIO = 'tienda-apps/appVisitas/datosFormulario/';
   private BUSCARDATOS='personas/datosPersonales/consultaPorIdentificacion';
   @ViewChild("video", { static: false })
   public video: ElementRef;
@@ -35,6 +35,7 @@ export class RegistrarComponent implements AfterViewInit {
     this.data = new FormGroup({
       nombre: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
       apellido: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
+      numeroCelular: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
       cedula: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(10)])),
       id_carnet: new FormControl('', Validators.compose([Validators.maxLength(10)])),
       visitar_a: new FormControl('', Validators.required),
@@ -130,6 +131,8 @@ export class RegistrarComponent implements AfterViewInit {
         'personaIDENTIFICACION': this.data.value.cedula,
       }, this.BUSCARDATOS).subscribe((res: any) => {
         if (res.RESPUESTA=='EXITO') {
+          console.log(res);
+          this.data.controls['numeroCelular'].setValue((res.DATOS.telefonoNUMEROCELULAR) ? res.DATOS.telefonoNUMEROCELULAR : "" );
           this.data.controls['nombre'].setValue(res.DATOS.personaPRIMERNOMBRE);
           this.data.controls['tipoIdentificacion'].setValue(res.DATOS.tipoIdentificacionID);
           this.data.controls['apellido'].setValue(res.DATOS.personaPRIMERAPELLIDO);
@@ -148,7 +151,6 @@ export class RegistrarComponent implements AfterViewInit {
   }
 
   registrar() {
-
 
     this.on=true;
     if (!this.data.valid) {
@@ -172,7 +174,8 @@ export class RegistrarComponent implements AfterViewInit {
       'visitaESTADOCARNET': this.data.value.id_carnet==""? "SIN CARNET" : "ENTREGADO",
       'visitaMOTIVO':this.data.value.visitaMOTIVO,
       'personaPRIMERNOMBRE':this.data.value.nombre ,
-      'personaPRIMERAPELLIDO':this.data.value.apellido
+      'personaPRIMERAPELLIDO':this.data.value.apellido,
+      'telefonoNUMEROCELULAR' : this.data.value.numeroCelular
     });
     this.router.navigate(['/autoreporte','SIN CITA PREVIA']);
       /*this.BaseService.postJson({
@@ -209,6 +212,7 @@ export class RegistrarComponent implements AfterViewInit {
     this.data.controls['visitar_a'].setValue('');
     this.data.controls['id_carnet'].setValue('');
     this.data.controls['visitaMOTIVO'].setValue('');
+    this.data.controls['numeroCelular'].setValue('');
     this.photo = '';
     //this.prender();
   }

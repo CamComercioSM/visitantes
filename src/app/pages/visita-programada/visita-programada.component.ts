@@ -27,8 +27,8 @@ export class VisitaProgramadaComponent implements OnInit {
 
   devueltos: number;
   todos: number;
-  GET_VISITAS = 'administracion/appVisitas/listadoCitasProgramadas/';
-  ACTUALIZAR_ESTADOS = 'administracion/appVisitas/cambiarEstadosCarnetYVisitante/';
+  GET_VISITAS = 'tienda-apps/appVisitas/listadoCitasProgramadas/';
+  ACTUALIZAR_ESTADOS = 'tienda-apps/appVisitas/cambiarEstadosCarnetYVisitante/';
 
   DESACTIVO='DESACTIVO';
   ACTIVO='ACTIVO';
@@ -93,6 +93,8 @@ export class VisitaProgramadaComponent implements OnInit {
   getVisitas() {
     let sede = this.LocalStorageService.get();
     this.BaseService.postJson({ 'sedeID': sede },this.GET_VISITAS).subscribe((res: any) => {
+       console.log(res);
+
       if (res.DATOS.length == 0) {
         this.vacio = true;
       } else {
@@ -108,7 +110,7 @@ export class VisitaProgramadaComponent implements OnInit {
   }
 
 
-  ModalcambiarEstados(visitaID,visitaEstadoVisitante,i) {
+  ModalcambiarEstados(visitaID,visitaEstadoVisitante,i,personaID) {
 
     if(visitaEstadoVisitante==this.ACTIVO){
       const swalWithBootstrapButtons = Swal.mixin({
@@ -129,12 +131,12 @@ export class VisitaProgramadaComponent implements OnInit {
       }).then((result) => {
         if (result.value) {
           this.nCarnet();
-          this.modalNumCarnet(visitaID,visitaEstadoVisitante, i);
+          this.modalNumCarnet(visitaID,visitaEstadoVisitante, i,personaID);
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
         ) {
-          this.cambiarEstados(visitaID,this.SIN_CARNET,visitaEstadoVisitante, i);
+          this.cambiarEstados(visitaID,this.SIN_CARNET,visitaEstadoVisitante, i,personaID);
         }
       });
     }
@@ -149,7 +151,7 @@ export class VisitaProgramadaComponent implements OnInit {
       }
     }
 }
-  async modalNumCarnet(visitaID,visitaEstadoVisitante, i){
+  async modalNumCarnet(visitaID,visitaEstadoVisitante, i,personaID){
     const { value: formValues } = await Swal.fire({
       title: 'Seleccione el numero de carnet',
       input: 'select',
@@ -159,20 +161,23 @@ export class VisitaProgramadaComponent implements OnInit {
     });
     let visitaNUMCARNET=formValues;
     if(visitaNUMCARNET){
-      this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i,visitaNUMCARNET);
+      this.cambiarEstados(visitaID,this.ENTREGADO,visitaEstadoVisitante, i,personaID,visitaNUMCARNET);
       //console.log(visitaNUMCARNET);
     }
 
   }
-  cambiarEstados(visitaID,visitaEstadoCarnet,visitaEstadoVisitante, i,visitaNUMCARNET=null) {
+  cambiarEstados(visitaID,visitaEstadoCarnet,visitaEstadoVisitante, i,personaID,visitaNUMCARNET=null) {
 
     this.DatosVisitasService.post({
       'visitaID': visitaID,
       'visitaEstadoCarnet': visitaEstadoCarnet,
       'visitaNUMCARNET': visitaNUMCARNET,
       'visitaEstadoVisitante':visitaEstadoVisitante,
-      'visitaTIPO':"PROGRAMADA"
+      'visitaTIPO':"PROGRAMADA",
+      'sedeID': this.LocalStorageService.get(),
+      'personaID': personaID
     });
+
     this.router.navigate(['/autoreporte','PROGRAMADA']);
     /*
     this.BaseService.postJson({

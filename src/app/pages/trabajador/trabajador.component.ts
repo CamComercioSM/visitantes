@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class TrabajadorComponent implements OnInit {
 
-  private GET: string = 'administracion/appVisitas/colaboradores/';
+  private GET: string = 'tienda-apps/appVisitas/colaboradores/';
   trabajadores = [];
   p: number = 1;
   filtroPost = '';

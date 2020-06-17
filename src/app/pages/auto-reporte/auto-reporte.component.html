@@ -5,13 +5,19 @@
   </div>
   <hr>
   <div  id="contenedor" class="row d-flex justify-content-center">
-      <form class="col-12" id="frm" >
+      <form class="col-12" id="frm" name="frm" >
         <div class="row">
-          <div class="col">
+          <div class="col-md-6">
             <label class="form-check-label" for="edad">
               Edad de la persona
             </label>
-            <input type="number" class="form-control" id="edad" placeholder="Edad" >
+            <input type="number" class="form-control" id="edad" name="edad" placeholder="Edad"  value="" required >
+          </div>
+          <div class="col-md-6">
+            <label class="form-check-label" for="edad">
+              Temperatura
+            </label>
+            <input type="number" class="form-control" id="temperatura" name="temperatura" placeholder="Temperatura"  value="" required>
           </div>
         </div>
         <hr>
@@ -21,8 +27,20 @@
               <ng-container *ngIf="pregunta.autoreportePreguntaTIPO=='MULTIPLE_RESPUESTA'" >
 
                   <div class=" col-12 pl-5" *ngFor="let opcionesPregunta of pregunta.opcionesRespuesta">
-                  <input class="form-check-input" type="checkbox" [value]="opcionesPregunta.autoreporteOpcionID" name="respuestas[]" id="opciones{{opcionesPregunta.autoreporteOpcionID}}"  >
-                  <label class="form-check-label" for="opciones{{opcionesPregunta.autoreporteOpcionID}}">
+                    <ng-template *ngIf="opcionesPregunta.autoreporteOpcionFUNCIONALIDAD == 'NINGUNO'; then ninguno else otros"></ng-template>
+                    <ng-template #ninguno >
+                      <input (click)="checkboxNinguno(pregunta.autoreportePreguntaID)" class="form-check-input checkboxRespuesta{{pregunta.autoreportePreguntaID}} opcionNinguno{{pregunta.autoreportePreguntaID}}" type="checkbox" [value]="opcionesPregunta.autoreporteOpcionID" name='opcionRespuesta-{{pregunta.autoreportePreguntaID}}' id="opcionRespuesta{{opcionesPregunta.autoreporteOpcionID}}"  >
+                    </ng-template>
+                    <ng-template #otros>
+                      <ng-template *ngIf="opcionesPregunta.autoreporteOpcionFUNCIONALIDAD == 'TODOS'; then todos else otro"></ng-template>
+                      <ng-template #todos>
+                        <input  (click)="checkboxTodos(pregunta.autoreportePreguntaID,'opcionRespuesta')" class="form-check-input checkboxRespuesta{{pregunta.autoreportePreguntaID}} opcionRespuesta{{pregunta.autoreportePreguntaID}}" type="checkbox" [value]="opcionesPregunta.autoreporteOpcionID"  id="opcionRespuesta{{opcionesPregunta.autoreporteOpcionID}}"  >
+                      </ng-template>
+                      <ng-template #otro>
+                          <input  (click)="checkboxRespuesta(pregunta.autoreportePreguntaID)" class="form-check-input checkboxRespuesta{{pregunta.autoreportePreguntaID}} opcionRespuesta{{pregunta.autoreportePreguntaID}}" type="checkbox" [value]="opcionesPregunta.autoreporteOpcionID" name='opcionRespuesta-{{pregunta.autoreportePreguntaID}}' id="opcionRespuesta{{opcionesPregunta.autoreporteOpcionID}}"  >
+                      </ng-template>
+                    </ng-template>
+                  <label class="form-check-label" for="opcionRespuesta{{opcionesPregunta.autoreporteOpcionID}}">
                       {{opcionesPregunta.autoreporteOpcionRESPUESTA}}
                   </label>
                 </div>
@@ -30,8 +48,8 @@
               </ng-container>
               <ng-container  *ngIf="pregunta.autoreportePreguntaTIPO=='UNICA_RESPUESTA' "  >
                 <div class=" col-12 pl-5"  *ngFor="let opcionesPregunta of pregunta.opcionesRespuesta">
-                  <input class="form-check-input" type="radio" name="exampleRadios"  id="opciones{{opcionesPregunta.autoreporteOpcionID}}" [value]="opcionesPregunta.autoreporteOpcionID">
-                  <label class="form-check-label" for="opciones{{opcionesPregunta.autoreporteOpcionID}}">
+                  <input class="form-check-input" type="radio" name="unaOpcionRespuesta-{{pregunta.autoreportePreguntaID}}"  id="{{opcionesPregunta.autoreporteOpcionID}}" [value]="opcionesPregunta.autoreporteOpcionID" required>
+                  <label class="form-check-label" for="{{opcionesPregunta.autoreporteOpcionID}}">
                     {{opcionesPregunta.autoreporteOpcionRESPUESTA}}
                   </label>
                 </div>
@@ -44,8 +62,7 @@
         </div>
           <hr>
           <div  class="form-row d-flex justify-content-center">
-            <button   type="submit"  class="btn btn-primary"  >Enviar</button>
-
+            <button   type="submit" (click)="dataFormulario()" class="btn btn-primary">Enviar</button>
           </div>
       </form>
   </div>
