@@ -108,6 +108,8 @@ export class RegistrarComponent implements AfterViewInit {
       'sedeID': this.LocalStorageService.get(),
     },this.DATOFORMULARIO).subscribe((res: any) => {
       this.colaboradores = res.DATOS.Colaboradores;
+      console.log(this.colaboradores);
+
       //this.colaboradoresTodos=res.DATOS.Colaboradores;
       this.tipoIdentificacion = res.DATOS.TiposIdentificaciones;
       //this.oficinas=res.DATOS.SedesOficinas;

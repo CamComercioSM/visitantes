@@ -65,7 +65,7 @@
         <div class="form-row  ">
           <div class="form-group col-md-5">
             <label for="inputEmail4">Tipo de identificación <label class="text-danger ">*</label> </label>
-            <select class="form-control " formControlName="tipoIdentificacion" name="tipoIdentificacion">
+            <select class="form-control "  formControlName="tipoIdentificacion" name="tipoIdentificacion">
               <option value="" selected>Elegir Tipo de identificación</option>
               <option *ngFor="let item of tipoIdentificacion" [value]="item.tipoIdentificacionID">
                 {{item.tipoIdentificacionTITULO}}</option>
@@ -73,7 +73,7 @@
           </div>
           <div class="form-group col-md-6">
             <label for="inputPassword4">Cedula <label class="text-danger ">*</label></label>
-            <input type="text" class="form-control" name="cedula" formControlName="cedula" placeholder="Cedula">
+            <input type="text" [readonly]="buscarOn" class="form-control" name="cedula" formControlName="cedula" placeholder="Cedula">
           </div>
           <div class="form-group col-md-1 text-center pt-2 d-flex justify-content-center">
             <!-- <label for="inputPassword4">Buscar</label> -->
@@ -95,11 +95,11 @@
         <div class="form-row ">
           <div class="form-group col-md-6">
             <label for="inputEmail4">Primer Nombre <label class="text-danger ">*</label></label>
-            <input type="text" class="form-control" name="nombre" formControlName="nombre" placeholder="Nombre">
+            <input type="text" [readonly]="buscarOn" class="form-control" name="nombre" formControlName="nombre" placeholder="Nombre">
           </div>
           <div class="form-group col-md-6">
             <label for="inputEmail4">Primer Apellido <label class="text-danger ">*</label></label>
-            <input type="text" class="form-control" name="apellido" formControlName="apellido" placeholder="Apellido">
+            <input type="text" [readonly]="buscarOn" class="form-control" name="apellido" formControlName="apellido" placeholder="Apellido">
           </div>
 
 
@@ -108,7 +108,7 @@
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="numeroCelular">Numero Celular <label class="text-danger ">*</label></label>
-            <input type="number" class="form-control" name="numeroCelular" id="numeroCelular"
+            <input type="number" [readonly]="buscarOn" class="form-control" name="numeroCelular" id="numeroCelular"
               formControlName="numeroCelular" placeholder="Celular">
           </div>
           <div class="form-group col-md-6">
@@ -128,7 +128,8 @@
             <select class="form-control" formControlName="visitar_a" name="visitar_a">
               <option value="" selected>Elegir colaborador</option>
               <option *ngFor="let item of colaboradores" [value]="item.colaboradorID">
-                {{item.personaRAZONSOCIAL|titlecase }}</option>
+                <strong style="color: black;" > {{item.personaRAZONSOCIAL|titlecase }}</strong> - {{item.cargoTITULO}}
+              </option>
             </select>
           </div>
           <div *ngIf="cargaColaboradores" class="form-group col-md-12 text-center d-flex justify-content-center   ">
