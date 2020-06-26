@@ -29,6 +29,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import "firebase/firestore";
 import  "firebase/auth";
+import { OficinaColaboradoresComponent } from '../../pages/oficina-colaboradores/oficina-colaboradores.component';
 
 @NgModule({
   imports: [
@@ -51,8 +52,8 @@ import  "firebase/auth";
     VisitaProgramadaComponent,
     FiltroPipe,
     VisitaEventoComponent,
-    AutoReporteComponent
-    // LoginComponent,
+    AutoReporteComponent,
+    OficinaColaboradoresComponent
   ],
 
   providers: [AngularFireAuth, AngularFirestore],

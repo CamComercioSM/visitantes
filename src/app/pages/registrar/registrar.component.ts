@@ -16,6 +16,7 @@ export class RegistrarComponent implements AfterViewInit {
   private POST = 'tienda-apps/appVisitas/guardarYActivarVisita/';
   private DATOFORMULARIO = 'tienda-apps/appVisitas/datosFormulario/';
   private BUSCARDATOS='personas/datosPersonales/consultaPorIdentificacion';
+  private BUSCAR_COLABORADORES_OFICINA='tienda-apps/appVisitas/colaboradoresPorOficina/';
   @ViewChild("video", { static: false })
   public video: ElementRef;
 
@@ -24,13 +25,17 @@ export class RegistrarComponent implements AfterViewInit {
   @ViewChild("canvas", { static: false })
   public canvas: ElementRef;
   public colaboradores = [];
+  public colaboradoresTodos=[];
+  public oficinas=[];
   public tipoIdentificacion = [];
   public photo: any;
   public dispositivosDeVideo = [];
+  public oficinaID="";
   N_carnet=[];
   data: FormGroup;
   on:boolean=false;
   buscarOn:boolean=false;
+  cargaColaboradores:boolean=false;
   constructor(public Alertas: AlertasService, private router: Router, private BaseService: BaseService, public LocalStorageService: LocalStorageService, public DatosVisitasService:DatosVisitasService ) {
     this.data = new FormGroup({
       nombre: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(15)])),
@@ -99,11 +104,37 @@ export class RegistrarComponent implements AfterViewInit {
   }
 
   public datoFormulario() {
-    this.BaseService.getJson(this.DATOFORMULARIO).subscribe((res: any) => {
+    this.BaseService.postJson({
+      'sedeID': this.LocalStorageService.get(),
+    },this.DATOFORMULARIO).subscribe((res: any) => {
       this.colaboradores = res.DATOS.Colaboradores;
+      //this.colaboradoresTodos=res.DATOS.Colaboradores;
       this.tipoIdentificacion = res.DATOS.TiposIdentificaciones;
-
+      //this.oficinas=res.DATOS.SedesOficinas;
     });
+
+  }
+
+  public cambiarOficina(){
+
+    if(this.oficinaID){
+      this.cargaColaboradores=true;
+      this.BaseService.postJson({
+        'sedeOficinaID': this.oficinaID,
+      }, this.BUSCAR_COLABORADORES_OFICINA).subscribe((res: any) => {
+        if (res.RESPUESTA=='EXITO') {
+          console.log(res);
+          this.colaboradores = res.DATOS.Colaboradores;
+
+        }else {
+          this.Alertas.alertOk('error',res.MENSAJE);
+        }
+        this.cargaColaboradores=false;
+      });
+    }else{
+      this.colaboradores = this.colaboradoresTodos;
+    }
+
   }
 
   public apagar() {

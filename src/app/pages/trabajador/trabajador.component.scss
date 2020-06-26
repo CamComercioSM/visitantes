@@ -3,7 +3,7 @@
    .sonar-wrapper {
     height: 50%;
   }
-  
+
   /* Prevent scrollbars to appear when waves go out of bound */
   .sonar-wrapper {
     position: relative;
@@ -12,7 +12,7 @@
     padding: 8rem 0;
     margin: auto;
   }
-  
+
   /* The circle */
   .sonar-emitter {
     position: relative;
@@ -21,9 +21,9 @@
     height: 80px;
     border-radius: 9999px;
     background-color: HSL(45,100%,50%);
-    
+
   }
-  
+
   /* the 'wave', same shape and size as its parent */
   .sonar-wave {
     position: absolute;
@@ -37,7 +37,7 @@
     z-index: -1;
     pointer-events: none;
   }
-  
+
   /*
     Animate!
     NOTE: add browser prefixes where needed.
@@ -45,7 +45,7 @@
   .sonar-wave {
     animation: sonarWave 0.5s linear infinite;
   }
-  
+
   @keyframes sonarWave {
     from {
       opacity: 0.4;
@@ -55,4 +55,8 @@
       opacity: 0;
     }
   }
-  
+
+  .ROJO{
+
+    background: rgba(221, 64, 64, 0.527);
+  }

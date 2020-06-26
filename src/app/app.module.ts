@@ -32,7 +32,8 @@ import { VisitaProgramadaComponent } from './pages/visita-programada/visita-prog
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    LoginComponent
+    LoginComponent,
+
 
     // VisitaEventoComponent,
     // VisitaProgramadaComponent,

@@ -24,8 +24,9 @@ export class TrabajadorComponent implements OnInit {
 
   getTrabajadores() {
     this.BaseService.getJson(this.GET).subscribe((res: any) => {
-      // console.log(res);
-      this.trabajadores = res.DATOS;
+
+     // this.trabajadores = res.DATOS;
+      this.AsignarEstilosAlerta(res.DATOS);
     });
 
     // this.BaseService.getJson('administracion/appVisitas/estaLogiado/').subscribe((res: any) => {
@@ -35,6 +36,32 @@ export class TrabajadorComponent implements OnInit {
     // this.BaseService.getJson('administracion/appVisitas/datoSession/').subscribe((res: any) => {
     //   console.log(res);
     // });
+  }
+
+  AsignarEstilosAlerta(trabajadores){
+    var fechaActual=new Date();
+    fechaActual.setHours(0,0,0,0);
+
+    trabajadores.forEach(trabajador => {
+      let fechaAutoreporte=new Date(trabajador.autoreporteResultadoFCHCREACION);
+      fechaAutoreporte.setHours(0,0,0,0);
+      if(trabajador.autoreporteResultadoFCHCREACION){
+        if (fechaAutoreporte.getTime()==fechaActual.getTime() && trabajador.autoreporteResultadoRESULTADO != "ALERTA") {
+
+          trabajador.colorEstilo="NORMAL";
+        }else{
+
+          trabajador.colorEstilo="ALERTA";
+        }
+      }else{
+        trabajador.colorEstilo="VACIO";
+
+
+      }
+
+      //trabajador.Estilo="ALERTA";
+    });
+    this.trabajadores = trabajadores;
   }
 
 }

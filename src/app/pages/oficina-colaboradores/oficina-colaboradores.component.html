@@ -1,0 +1,36 @@
+<div class="opacity" *ngIf="cargarContenido" class=" w-100 ">
+  <div class="sonar-wrapper">
+    <div class="sonar-emitter">
+      <div class="sonar-wave"></div>
+    </div>
+  </div>
+</div>
+
+<div class="contenedor" *ngIf="!cargarContenido">
+  <div class="row text-center d-flex justify-content-center">
+    <h2>{{sedeTitulo}}</h2>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let oficina of oficinas" >
+      <div class="card">
+        <div class="card-header text-center">
+          <h4 class="card-title">
+            {{oficina.sedeOficinaTITULO}}
+          </h4>
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let colaborador of oficina.colaboradores" >
+              <strong>{{colaborador.personaRAZONSOCIAL|titlecase }}</strong><br>{{colaborador.personaIDENTIFICACION}}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>

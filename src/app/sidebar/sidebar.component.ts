@@ -14,7 +14,9 @@ export const ROUTES: RouteInfo[] = [
     { path: '/table',         title: 'Visitantes',        icon:'nc-tile-56',    class: '' },
     {path:'/VisitaEvento', title: 'Eventos', icon:'nc-tile-56',class:''},
     { path: '/trabajador',     title: 'Trabajadores', icon:'nc-bullet-list-67',class: '' },
+    //{ path: '/oficinaColaboradores',     title: 'Oficinas', icon:'nc-bullet-list-67',class: '' },
     { path: '/registrar',     title: 'Registrar Visitante', icon:'nc-badge',class: '' }
+
 ];
 
 @Component({
