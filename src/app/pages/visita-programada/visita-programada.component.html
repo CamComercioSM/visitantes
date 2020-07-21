@@ -28,9 +28,6 @@
                   Estado_Visitante
                 </th>
                 <th>
-                  Estado_Carnet
-                </th>
-                <th>
                     Fecha_Programada
                 </th>
                 <th>
@@ -49,15 +46,15 @@
                 <th>
                   Motivo
                 </th>
+                <th>
+                  Foto
+                </th>
               </thead>
               <tbody *ngIf="visitas.length>=1">
                 <tr *ngFor="let visita of visitas | filtro:filtroPost| paginate: { itemsPerPage: 50, currentPage: p };let i = index">
                   <td class="bg-warning" *ngIf="visita.visitaESTADOVISITANTE==DESACTIVO"  >
                     <button  class="btn btn-warning" (click)="ModalcambiarEstados(visita.visitaID,ACTIVO,i,visita.personaID)" ><i class="nc-icon nc-tap-01 "></i>Activar</button>
                   </td>
-                  <td *ngIf="visita.visitaESTADOCARNET == PENDIENTE">
-                    {{visita.visitaESTADOCARNET}}
-                 </td>
                   <td>
                     {{visita.visitaFCHPROGRAMADA}}
                   </td>
@@ -71,7 +68,7 @@
                     {{visita.ColaboradorRAZONSOCIAL|titlecase}}
                   </td>
                   <td>
-                    {{visita.visitaAUTORIZADAPOR|titlecase}}
+                   {{visita.autorizadorIDENTIFICACION}} - {{visita.autorizadorRAZONSOCIAL|titlecase}}
                   </td>
                   <td *ngIf="visita.visitaMOTIVO">
                     <button (click)="motivo(visita.personaRAZONSOCIAL,visita.visitaMOTIVO)" class="btn btn-sm  btn-primary p-1" > <i class="nc-icon nc-single-copy-04 "></i></button>
@@ -79,6 +76,14 @@
                    <td *ngIf="!visita.visitaMOTIVO" >
                     <i class="nc-icon nc-simple-remove "></i>
                    </td>
+
+                   <td *ngIf="visita.visitaFOTO">
+                    <button (click)="foto(visita.personaRAZONSOCIAL,visita.visitaFOTO)" class="btn btn-sm btn-primary p-1" > <i class="nc-icon nc-single-02 "></i></button>
+                  </td>
+
+                  <td *ngIf="!visita.visitaFOTO" >
+                    <i class="nc-icon nc-simple-remove "></i>
+                  </td>
                 </tr>
               </tbody>
 

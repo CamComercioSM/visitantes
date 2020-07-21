@@ -200,7 +200,14 @@ export class VisitaProgramadaComponent implements OnInit {
       }
     });*/
   }
-
+  foto(nombre, base64) {
+    Swal.fire({
+      title: "<strong>" + nombre + "</strong>",
+      html:
+        "<img src='" + base64 + "' id='img' alt='foto' class='img-circle img-no-padding img-responsive'>",
+      showCloseButton: true
+    })
+  }
 
 
 }
