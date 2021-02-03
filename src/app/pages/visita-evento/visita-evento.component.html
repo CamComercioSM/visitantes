@@ -21,14 +21,15 @@
           </select>
         </div>
       </div>
-      <p class="text-center">{{eventoSelec.eventoTITULO|uppercase}}</p>
+      
       <hr/>
         <div class="text-center" >
+          <p class="text-center"><strong>{{eventoSelec.eventoTITULO|uppercase}}</strong></p>
           <p class="text-center">
              <strong>Inicio: </strong>{{eventoSelec.eventoFCHINICIO|date : 'MMM d, y, h:mm a'}} 
             <strong>Final: </strong>{{eventoSelec.eventoFCHFINAL|date : 'MMM d, y, h:mm a'}}
             <strong>Lugar: </strong>{{eventoSelec.eventoLUGAR}}
-           <strong *ngIf="eventoSelec.eventoUSRCREO!=null">Creado Por: </strong>{{eventoSelec.eventoUSRCREO}}
+           <strong *ngIf="eventoSelec.eventoUSRCREO!=null">Encargado: </strong>{{eventoSelec.colaboradorRAZONSOCIAL}}
           </p>
         </div>
       <div class="card-body">
