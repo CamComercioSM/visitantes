@@ -40,9 +40,11 @@
                   Visitar_a
                 </th>
                 <th>
+                  Estado_Autorización
+                </th>
+                <th>
                   Autorizado_Por
                 </th>
-
                 <th>
                   Motivo
                 </th>
@@ -52,8 +54,11 @@
               </thead>
               <tbody *ngIf="visitas.length>=1">
                 <tr *ngFor="let visita of visitas | filtro:filtroPost| paginate: { itemsPerPage: 50, currentPage: p };let i = index">
-                  <td class="bg-warning" *ngIf="visita.visitaESTADOVISITANTE==DESACTIVO"  >
-                    <button  class="btn btn-warning" (click)="ModalcambiarEstados(visita.visitaID,ACTIVO,i,visita.personaID)" ><i class="nc-icon nc-tap-01 "></i>Activar</button>
+                  <td  *ngIf="visita.visitaESTADOVISITANTE==DESACTIVO"  >
+                    <button  class="btn btn-warning" *ngIf="visita.visitaESTADOAUTORIZACION == 'AUTORIZADA' ; else elseBlock" (click)="ModalcambiarEstados(visita.visitaID,ACTIVO,i,visita.personaID)" ><i class="nc-icon nc-tap-01 "></i>Activar</button>
+                    <ng-template #elseBlock  > 
+                      <button  class="btn btn-danger"  disabled  >x</button>
+                    </ng-template>
                   </td>
                   <td>
                     {{visita.visitaFCHPROGRAMADA}}
@@ -66,6 +71,9 @@
                   </td>
                   <td>
                     {{visita.ColaboradorRAZONSOCIAL|titlecase}}
+                  </td>
+                  <td>
+                    {{visita.visitaESTADOAUTORIZACION}}
                   </td>
                   <td>
                    {{visita.autorizadorIDENTIFICACION}} - {{visita.autorizadorRAZONSOCIAL|titlecase}}
